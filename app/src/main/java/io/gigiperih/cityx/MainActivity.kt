@@ -9,5 +9,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // change commit author duh!
+        // verify commit authorg
     }
 }

@@ -68,7 +68,7 @@ class CityRepositoryTest {
         }
     }
 
-    // TODO refactor (might use more fast algorithm?)
+    // TODO refactor (might use faster algorithm?)
     private fun List<City>?.sortAlphabetically(): List<City>? {
         if (this == null) return null
         return this.sortedBy { it.name }

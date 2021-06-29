@@ -34,6 +34,26 @@ class CityRepositoryTest {
         loadData(FakeData.invalidSample)
     }
 
+    @Test
+    fun `given unsorted list of city, when sorting is success, should return sorted list`() {
+        val unsortedList = loadData(FakeData.unsortedSample)
+        val result = unsortedList.sortAlphabetically()
+
+        assertThat(result).apply {
+            isEqualTo(FakeData.expectedSample)
+        }
+    }
+
+    @Test
+    fun `given null value of city, when sorting is failing, should return null`() {
+        val unsortedList = loadData(FakeData.incompleteSample)
+        val result = unsortedList.sortAlphabetically()
+
+        assertThat(result).apply {
+            isNull()
+        }
+    }
+
     // TODO refactor
     private fun loadData(json: String): List<City>? {
         return try {
@@ -46,5 +66,11 @@ class CityRepositoryTest {
         } catch (e: JsonDataException) {
             null
         }
+    }
+
+    // TODO refactor (might use more fast algorithm?)
+    private fun List<City>?.sortAlphabetically(): List<City>? {
+        if (this == null) return null
+        return this.sortedBy { it.name }
     }
 }

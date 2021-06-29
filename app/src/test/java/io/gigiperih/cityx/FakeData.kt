@@ -8,6 +8,13 @@ object FakeData {
         ]
     """
 
+    const val unsortedSample = """
+        [
+            {"country":"RU","name":"Novinki","_id":519188,"coord":{"lon":37.666668,"lat":55.683334}},
+            {"country":"UA","name":"Hurzuf","_id":707860,"coord":{"lon":34.283333,"lat":44.549999}}
+        ]
+    """
+
     const val incompleteSample = """
         [
             {"country":"IN","name":"State of Haryāna","_id":1270260}

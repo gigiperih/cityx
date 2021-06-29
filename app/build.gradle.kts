@@ -75,6 +75,10 @@ dependencies {
     // JSON library
     implementation("com.squareup.moshi:moshi-kotlin:1.12.0")
 
+    // TODO remove it later
+    // helper to log and recreate large object in testing
+    implementation("com.jakewharton.timber:timber:4.7.1")
+
     // unit testing libraries
     testImplementation("junit:junit:4.13.2")
     testImplementation("com.google.truth:truth:1.1.3")

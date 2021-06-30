@@ -64,7 +64,7 @@ class CityRepositoryTest {
         }
         result.clear()
 
-        // delta time by adding previous timeExecSmall assuming JVM is already warmed up
+        // delta time by adding previous timeExecSmall assuming JVM was already warmed up
         val timeExecLarge = measureTimeMillis {
             loadData(FakeLargeData.jsonSample).sortAlphabetically()?.let { result.addAll(it) }
         } + timeExecSmall

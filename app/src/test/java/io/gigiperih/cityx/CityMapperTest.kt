@@ -3,6 +3,7 @@ package io.gigiperih.cityx
 import com.google.common.truth.Truth.assertThat
 import io.gigiperih.cityx.data.City
 import org.junit.Test
+import kotlin.system.measureTimeMillis
 
 class CityMapperTest {
     @Test
@@ -29,7 +30,24 @@ class CityMapperTest {
 
     @Test
     fun `given valid large and small list, relative mapping time complexity should be better than linear`() {
-        TODO("Not yet implemented")
+        // assuming already sorted alphabetically
+        val timeExecSmall = measureTimeMillis {
+            FakeData.expectedSample.toHashMap()
+        }
+
+        // delta by considering jvm warm up process
+        val timeExecLarge = measureTimeMillis {
+            FakeLargeData.expectedSample.toHashMap()
+        } + timeExecSmall
+
+        // linear time complexity
+        // if list size is 2 and took ~1ms to complete
+        // then list size 100 should be ~50ms
+
+        // requirement: should be better than linear time complexity: O(n)
+        assertThat(timeExecLarge).apply {
+            isLessThan(timeExecSmall * 50)
+        }
     }
 
     // TODO refactor to MVVM

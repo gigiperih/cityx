@@ -7,6 +7,11 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.gigiperih.cityx.data.City
+import io.gigiperih.cityx.data.repository.CityRepositoryImpl
+import io.gigiperih.cityx.data.source.ResourceService
+import io.gigiperih.cityx.domain.repository.CityRepository
+import io.mockk.mockk
+import org.junit.Before
 import org.junit.Test
 import kotlin.system.measureTimeMillis
 
@@ -16,6 +21,19 @@ class CityRepositoryTest {
     private val largeDataSet = getResource(fileName = "cities_20k.json")
     private val incompleteDataSet = getResource(fileName = "incomplete.json")
     private val invalidDataSet = getResource(fileName = "invalid.json")
+
+    var service: ResourceService = mockk(relaxed = true)
+    private lateinit var objectUnderTest: CityRepository
+
+    @Before
+    fun setUp() {
+        objectUnderTest = CityRepositoryImpl(service)
+    }
+
+    @Test
+    fun `verify objectUnderTest is not null`() {
+        TODO("Not yet implemented")
+    }
 
     @Test
     fun `given valid json file, when parsing is succeed, should return correct list of cities`() {

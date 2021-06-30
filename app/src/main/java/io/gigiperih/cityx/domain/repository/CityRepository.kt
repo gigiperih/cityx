@@ -1,4 +1,7 @@
 package io.gigiperih.cityx.domain.repository
 
-class CityRepository {
+import io.gigiperih.cityx.data.City
+
+interface CityRepository {
+    fun get(fileName: String): List<City>?
 }

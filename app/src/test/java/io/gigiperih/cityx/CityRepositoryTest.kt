@@ -10,7 +10,11 @@ import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.data.repository.CityRepositoryImpl
 import io.gigiperih.cityx.data.source.ResourceService
 import io.gigiperih.cityx.domain.repository.CityRepository
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.unmockkAll
+import io.mockk.verify
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import kotlin.system.measureTimeMillis
@@ -30,20 +34,32 @@ class CityRepositoryTest {
         objectUnderTest = CityRepositoryImpl(service)
     }
 
+    @After
+    fun tearDown() {
+        unmockkAll()
+    }
+
     @Test
     fun `verify objectUnderTest is not null`() {
-        TODO("Not yet implemented")
+        assertThat(objectUnderTest).isNotNull()
     }
 
     @Test
     fun `given valid json file, when parsing is succeed, should return correct list of cities`() {
-        val result = loadData(smallDataSet)
+        // given
+        every { service.get("cities_2.json") } returns smallDataSet
 
+        // when
+        val result = objectUnderTest.get("cities_2.json")
+
+        // then
         assertThat(result).apply {
             isEqualTo(FakeData.expectedSample)
-            hasSize(2)
+            hasSize(100)
             containsNoDuplicates()
         }
+
+        verify { service.get("cities_2.json") }
     }
 
     @Test

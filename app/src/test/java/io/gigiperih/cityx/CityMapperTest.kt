@@ -2,10 +2,12 @@ package io.gigiperih.cityx
 
 import com.google.common.truth.Truth.assertThat
 import io.gigiperih.cityx.data.City
+import org.junit.Before
 import org.junit.Test
 import kotlin.system.measureTimeMillis
 
 class CityMapperTest {
+
     @Test
     fun `given sorted list of city, when mapped toHashMap, should return correct hashMap`() {
         val result = FakeData.expectedSample.toHashMap()

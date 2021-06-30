@@ -17,9 +17,11 @@ import io.mockk.verify
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import kotlin.system.measureNanoTime
 import kotlin.system.measureTimeMillis
 
 class CityRepositoryTest {
+    private val singleDataSet = getResource(fileName = "city.json")
     private val smallDataSet = getResource(fileName = "cities_2.json")
     private val mediumDataSet = getResource(fileName = "cities_100.json")
     private val largeDataSet = getResource(fileName = "cities_20k.json")
@@ -55,7 +57,7 @@ class CityRepositoryTest {
         // then
         assertThat(result).apply {
             isEqualTo(FakeData.expectedSample)
-            hasSize(100)
+            hasSize(2)
             containsNoDuplicates()
         }
 
@@ -128,29 +130,33 @@ class CityRepositoryTest {
 
     @Test
     fun `given valid large and small json file, relative sorting time complexity should be better than linear`() {
-        val result = mutableListOf<City>()
-        val timeExecSmall = measureTimeMillis {
-            loadData(smallDataSet).sortAlphabetically()?.let { result.addAll(it) }
+
+        val singleData = loadData(singleDataSet)
+        val largeData = loadData(largeDataSet)
+
+        val timeExecSmall = measureNanoTime {
+            singleData.sortAlphabetically()
         }
-        result.clear()
 
         // delta time by adding previous timeExecSmall assuming JVM was already warmed up
-        val timeExecLarge = measureTimeMillis {
-            loadData(largeDataSet).sortAlphabetically()?.let { result.addAll(it) }
-        } + timeExecSmall
+        val timeExecLarge = measureNanoTime {
+            largeData.sortAlphabetically()
+        }
 
         // verify time execution
         assertThat(timeExecSmall).apply {
             isLessThan(timeExecLarge)
         }
 
-        // linear time complexity
-        // if list size is 2 and took ~1ms to complete
-        // then list size 20k should be ~10000ms
+        // linear time complexity:
+        // if a list contains 1 element took ~1ns to complete
+        // then 20k sized list should be ~20000ns
 
+        println("large $timeExecLarge")
+        println("small $timeExecSmall")
         // requirement: should be better than linear time complexity: O(n)
         assertThat(timeExecLarge).apply {
-            isLessThan(timeExecSmall * 10000)
+            isLessThan(timeExecSmall * 20000)
         }
     }
 

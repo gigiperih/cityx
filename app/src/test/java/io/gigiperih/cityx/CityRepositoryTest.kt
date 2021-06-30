@@ -7,6 +7,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import org.junit.Test
+import kotlin.system.measureTimeMillis
 
 class CityRepositoryTest {
     @Test
@@ -51,6 +52,34 @@ class CityRepositoryTest {
 
         assertThat(result).apply {
             isNull()
+        }
+    }
+
+    @Test
+    fun `given valid large and small json file, sorting time complexity should be better than linear`() {
+        val timeExecSmall = measureTimeMillis {
+            loadData(FakeData.validSample).sortAlphabetically()
+        }
+
+        val timeExecLarge = measureTimeMillis {
+            loadData(FakeLargeData.jsonSample).sortAlphabetically()
+        }
+
+        assertThat(timeExecSmall).apply {
+            isLessThan(timeExecLarge)
+        }
+
+        assertThat(FakeData.expectedSample.size).apply {
+            isLessThan(FakeLargeData.expectedSample.size)
+        }
+
+        // linear time complexity
+        // if list size is 2 and took ~1ms to complete
+        // then list size 100 should be ~50ms
+
+        // requirement: should be better than linear time complexity: O(n)
+        assertThat(timeExecLarge).apply {
+            isLessThan(50)
         }
     }
 

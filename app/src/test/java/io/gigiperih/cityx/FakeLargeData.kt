@@ -102,7 +102,7 @@ object FakeLargeData {
             {"country":"CN","name":"Zhengzhou","_id":1784658,"coord":{"lon":113.648613,"lat":34.757778}},
             {"country":"GB","name":"Tonyrefail","_id":7301040,"coord":{"lon":-3.41503,"lat":51.580238}},
             {"country":"IN","name":"Bankra","_id":1348747,"coord":{"lon":88.298058,"lat":22.627501}},
-            {"country":"RU","name":"Moskovskaya Oblast’","_id":524925,"coord":{"lon":37.628334,"lat":55.75639}},
+            {"country":"RU","name":"Moskovskaya Oblast’","_id":524925,"coord":{"lon":37.628334,"lat":55.75639}}
         ]
     """
 

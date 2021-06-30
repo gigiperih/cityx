@@ -14,6 +14,7 @@ class CityRepositoryTest {
     private val smallDataSet = getResource(fileName = "cities_2.json")
     private val mediumDataSet = getResource(fileName = "cities_100.json")
     private val incompleteDataSet = getResource(fileName = "incomplete.json")
+    private val invalidDataSet = getResource(fileName = "invalid.json")
 
     @Test
     fun `given valid json file, when parsing is succeed, should return correct list of cities`() {
@@ -28,7 +29,7 @@ class CityRepositoryTest {
 
     @Test
     fun `given valid but incomplete json file, when parsing is failing, should return null`() {
-        val result = loadData(smallDataSet)
+        val result = loadData(incompleteDataSet)
 
         assertThat(result).apply {
             isNull()
@@ -37,22 +38,22 @@ class CityRepositoryTest {
 
     @Test(expected = JsonEncodingException::class)
     fun `given invalid json file, when parsing is failing, should throws JsonEncodingException`() {
-        loadData(FakeData.invalidSample)
+        loadData(invalidDataSet)
     }
 
     @Test
     fun `given unsorted list of city, when sorting is success, should return sorted list`() {
-        val unsortedList = loadData(FakeData.unsortedSample)
+        val unsortedList = loadData(smallDataSet)
         val result = unsortedList.sortAlphabetically()
 
         assertThat(result).apply {
-            isEqualTo(FakeData.expectedSample)
+            isEqualTo(FakeData.sortedSample)
         }
     }
 
     @Test
     fun `given null value of city, when sorting is failing, should return null`() {
-        val unsortedList = loadData(FakeData.incompleteSample)
+        val unsortedList = loadData(smallDataSet)
         val result = unsortedList.sortAlphabetically()
 
         assertThat(result).apply {

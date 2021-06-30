@@ -56,19 +56,24 @@ class CityRepositoryTest {
     }
 
     @Test
-    fun `given valid large and small json file, sorting time complexity should be better than linear`() {
+    fun `given valid large and small json file, relative sorting time complexity should be better than linear`() {
+        val result = mutableListOf<City>()
         val timeExecSmall = measureTimeMillis {
-            loadData(FakeData.validSample).sortAlphabetically()
+            loadData(FakeData.validSample).sortAlphabetically()?.let { result.addAll(it) }
         }
+        result.clear()
 
+        // delta time by adding previous timeExecSmall assuming JVM is already warmed up
         val timeExecLarge = measureTimeMillis {
-            loadData(FakeLargeData.jsonSample).sortAlphabetically()
-        }
+            loadData(FakeLargeData.jsonSample).sortAlphabetically()?.let { result.addAll(it) }
+        } + timeExecSmall
 
+        // verify time execution
         assertThat(timeExecSmall).apply {
             isLessThan(timeExecLarge)
         }
 
+        // verify size
         assertThat(FakeData.expectedSample.size).apply {
             isLessThan(FakeLargeData.expectedSample.size)
         }
@@ -79,7 +84,7 @@ class CityRepositoryTest {
 
         // requirement: should be better than linear time complexity: O(n)
         assertThat(timeExecLarge).apply {
-            isLessThan(50)
+            isLessThan(timeExecSmall * 50)
         }
     }
 

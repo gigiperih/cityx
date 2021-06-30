@@ -6,6 +6,7 @@ import com.squareup.moshi.JsonEncodingException
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import io.gigiperih.cityx.data.City
 import org.junit.Test
 import kotlin.system.measureTimeMillis
 

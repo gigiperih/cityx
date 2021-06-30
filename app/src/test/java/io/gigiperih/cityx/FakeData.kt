@@ -1,5 +1,8 @@
 package io.gigiperih.cityx
 
+import io.gigiperih.cityx.data.City
+import io.gigiperih.cityx.data.Coordinate
+
 object FakeData {
     const val validSample = """
         [

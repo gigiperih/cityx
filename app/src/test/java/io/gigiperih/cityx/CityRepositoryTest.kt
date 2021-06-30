@@ -53,12 +53,32 @@ class CityRepositoryTest {
     }
 
     @Test
-    fun `given unsorted list of city, when sorting is success, should return sorted list`() {
+    fun `given unsorted small list of city, when sorting is success, should return sorted list`() {
         val unsortedList = loadData(smallDataSet)
         val result = unsortedList.sortAlphabetically()
 
         assertThat(result).apply {
             isEqualTo(FakeData.sortedSample)
+        }
+    }
+
+    @Test
+    fun `given unsorted medium list of city, when sorting is success, should return sorted list`() {
+        val unsortedList = loadData(mediumDataSet)
+        val result = unsortedList.sortAlphabetically()
+
+        assertThat(result).apply {
+            hasSize(100)
+        }
+    }
+
+    @Test
+    fun `given unsorted large list of city, when sorting is success, should return sorted list`() {
+        val unsortedList = loadData(largeDataSet)
+        val result = unsortedList.sortAlphabetically()
+
+        assertThat(result).apply {
+            hasSize(20000)
         }
     }
 

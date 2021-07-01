@@ -1,15 +1,15 @@
 package io.gigiperih.cityx
 
 import com.google.common.truth.Truth.assertThat
+import io.gigiperih.cityx.arch.BaseCityTest
 import io.gigiperih.cityx.data.City
-import org.junit.Before
+import io.gigiperih.cityx.data.mapper.CityMapper.toHashMap
 import org.junit.Test
-import kotlin.system.measureTimeMillis
 
 class CityMapperTest {
 
     @Test
-    fun `given sorted list of city, when mapped toHashMap, should return correct hashMap`() {
+    fun `given sorted small list of city, when mapped toHashMap, should return correct hashMap`() {
         val result = FakeData.expectedSample.toHashMap()
 
         assertThat(result).apply {
@@ -21,6 +21,15 @@ class CityMapperTest {
     }
 
     @Test
+    fun `given medium list of city, when mapped toHashMap, should return correct hashMap`() {
+        val result = FakeLargeData.expectedSample.toHashMap()
+
+        assertThat(result).apply {
+            hasSize(100)
+        }
+    }
+
+    @Test
     fun `given null list of city, when mapped toHashMap, should return null`() {
         val result: List<City>? = null
         result.toHashMap()
@@ -28,39 +37,5 @@ class CityMapperTest {
         assertThat(result).apply {
             isNull()
         }
-    }
-
-    @Test
-    fun `given valid large and small list, relative mapping time complexity should be better than linear`() {
-        // assuming already sorted alphabetically
-        val timeExecSmall = measureTimeMillis {
-            FakeData.expectedSample.toHashMap()
-        }
-
-        // delta by considering jvm warm up process
-        val timeExecLarge = measureTimeMillis {
-            FakeLargeData.expectedSample.toHashMap()
-        } + timeExecSmall
-
-        // linear time complexity
-        // if list size is 2 and took ~1ms to complete
-        // then list size 100 should be ~50ms
-
-        // requirement: should be better than linear time complexity: O(n)
-        assertThat(timeExecLarge).apply {
-            isLessThan(timeExecSmall * 50)
-        }
-    }
-
-    // TODO refactor to MVVM
-    private fun List<City>?.toHashMap(): HashMap<String, City>? {
-        if (this == null) return null
-
-        val hash = hashMapOf<String, City>()
-        this.map {
-            // maf city + country as hash key
-            hash["${it.name} ${it.country}"] = it
-        }
-        return hash
     }
 }

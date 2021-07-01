@@ -40,7 +40,7 @@ class CityMapperTest {
         // delta by considering jvm warm up process
         val timeExecLarge = measureTimeMillis {
             FakeLargeData.expectedSample.toHashMap()
-        } + timeExecSmall
+        }
 
         // linear time complexity
         // if list size is 2 and took ~1ms to complete
@@ -50,17 +50,5 @@ class CityMapperTest {
         assertThat(timeExecLarge).apply {
             isLessThan(timeExecSmall * 50)
         }
-    }
-
-    // TODO refactor to MVVM
-    private fun List<City>?.toHashMap(): HashMap<String, City>? {
-        if (this == null) return null
-
-        val hash = hashMapOf<String, City>()
-        this.map {
-            // maf city + country as hash key
-            hash["${it.name} ${it.country}"] = it
-        }
-        return hash
     }
 }

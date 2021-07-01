@@ -9,6 +9,8 @@ open class BaseCityTest {
     protected val incompleteDataSet = getResource(fileName = "incomplete.json")
     protected val invalidDataSet = getResource(fileName = "invalid.json")
 
+    // TODO: refactor
+    // replicate actual parsing mechanism
     private fun getResource(fileName: String) =
         this::class.java.classLoader?.getResource(fileName)?.readText()
 }

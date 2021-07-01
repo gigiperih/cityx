@@ -4,6 +4,15 @@ import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.data.Coordinate
 
 object FakeData {
+    val singleSample = listOf(
+        City(
+            country = "RU",
+            name = "Novinki",
+            _id = 519188,
+            coord = Coordinate(lon = 37.666668, lat = 55.683334)
+        )
+    )
+
     val expectedSample = listOf(
         City(
             country = "RU",

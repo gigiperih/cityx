@@ -6,7 +6,7 @@ import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.data.mapper.CityMapper.toHashMap
 import org.junit.Test
 
-class CityMapperTest : BaseCityTest() {
+class CityMapperTest {
 
     @Test
     fun `given sorted small list of city, when mapped toHashMap, should return correct hashMap`() {

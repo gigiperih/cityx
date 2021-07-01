@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     kotlin("android")
+    kotlin("android.extensions")
     kotlin("kapt")
 }
 android {
@@ -18,7 +19,7 @@ android {
     }
 
     buildFeatures {
-        dataBinding = true
+        viewBinding = true
     }
 
     buildTypes {
@@ -62,8 +63,26 @@ dependencies {
     implementation("com.google.android.material:material:1.3.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
 
+    // ktx arch components
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.3.1")
+
+    // coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3")
+
+    // JSON library
+    implementation("com.squareup.moshi:moshi-kotlin:1.12.0")
+
+    // TODO remove it later
+    // helper to log and recreate large object in testing
+    implementation("com.jakewharton.timber:timber:4.7.1")
+
     // unit testing libraries
     testImplementation("junit:junit:4.13.2")
+    testImplementation("com.google.truth:truth:1.1.3")
+    testImplementation("io.mockk:mockk:1.10.6")
 
     // instrumentation testing libraries
     androidTestImplementation("androidx.test.ext:junit:1.1.2")

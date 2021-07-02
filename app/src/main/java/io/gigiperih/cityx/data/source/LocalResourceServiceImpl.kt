@@ -1,6 +1,6 @@
 package io.gigiperih.cityx.data.source
 
-class ResourceServiceImpl : ResourceService {
+class LocalResourceServiceImpl : LocalResourceService {
     /**
      * TODO: might need coroutines
      */

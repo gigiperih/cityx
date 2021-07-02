@@ -1,5 +1,5 @@
 package io.gigiperih.cityx.data.source
 
-interface ResourceService {
+interface LocalResourceService {
     fun get(fileName: String): String?
 }

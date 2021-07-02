@@ -1,11 +1,11 @@
 package io.gigiperih.cityx
 
 import com.google.common.truth.Truth.assertThat
-import io.gigiperih.cityx.arch.BaseCityTest
 import io.gigiperih.cityx.data.City
-import io.gigiperih.cityx.data.mapper.CityMapper.toHashMap
+import io.gigiperih.cityx.data.mapper.toHashMap
 import org.junit.Test
 import java.util.*
+import kotlin.streams.toList
 
 class CityMapperTest {
 
@@ -45,8 +45,17 @@ class CityMapperTest {
         val result = FakeLargeData.expectedSample.toTreeMap()
 
         assertThat(result).apply {
-            hasSize(69)
+            hasSize(100)
         }
+
+        val ceil =
+            result?.keys?.stream()?.filter {
+                it.startsWith(prefix = "b", ignoreCase = true)
+            }?.toList()
+
+        assertThat(result?.firstKey()).isEqualTo("Alupka")
+        assertThat(result?.lastKey()).isEqualTo("‘Azriqam")
+        assertThat(ceil).isEqualTo("wok")
 
     }
 

@@ -5,6 +5,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.gigiperih.cityx.data.City
+import io.gigiperih.cityx.data.mapper.sortAlphabetically
 import io.gigiperih.cityx.data.source.LocalResourceService
 import io.gigiperih.cityx.domain.repository.CityRepository
 
@@ -17,6 +18,7 @@ class CityRepositoryImpl(private val localResourceService: LocalResourceService)
             val adapter = moshi.adapter<List<City>>(listType)
 
             localResourceService.get(fileName = fileName)?.let { adapter.fromJson(it) }
+                .sortAlphabetically()
         } catch (e: JsonDataException) {
             null
         }

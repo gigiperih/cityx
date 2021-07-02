@@ -3,7 +3,7 @@ package io.gigiperih.cityx
 import com.google.common.truth.Truth.assertThat
 import com.squareup.moshi.JsonEncodingException
 import io.gigiperih.cityx.arch.BaseCityTest
-import io.gigiperih.cityx.data.City
+import io.gigiperih.cityx.data.mapper.sortAlphabetically
 import io.gigiperih.cityx.data.repository.CityRepositoryImpl
 import io.gigiperih.cityx.data.source.LocalResourceService
 import io.gigiperih.cityx.domain.repository.CityRepository
@@ -14,7 +14,6 @@ import io.mockk.verify
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import java.util.*
 import kotlin.system.measureNanoTime
 
 class CityRepositoryTest : BaseCityTest() {
@@ -46,7 +45,7 @@ class CityRepositoryTest : BaseCityTest() {
 
         // then
         assertThat(result).apply {
-            isEqualTo(FakeData.expectedSample)
+            isEqualTo(FakeData.sortedSample)
             hasSize(2)
             containsNoDuplicates()
         }
@@ -216,15 +215,5 @@ class CityRepositoryTest : BaseCityTest() {
 
         verify { serviceLocal.get("city.json") }
         verify { serviceLocal.get("cities_110k.json") }
-    }
-
-    private fun List<City>?.sortAlphabetically(): List<City>? {
-        if (this == null) return null
-
-        // https://docs.oracle.com/javase/10/docs/api/java/util/Arrays.html#sort(byte%5B%5D)
-        // `Collection.sort()` works by calling the underlying `Arrays.sort()` method,
-        // while the sorting itself uses `Insertion Sort` for arrays shorter than 47,
-        // and `Quicksort` for the rest.
-        return this.sortedBy { it.name }
     }
 }

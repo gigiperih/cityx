@@ -4,8 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.data.mapper.toHashMap
 import org.junit.Test
-import java.util.*
-import kotlin.streams.toList
 
 class CityMapperTest {
 
@@ -38,29 +36,5 @@ class CityMapperTest {
         assertThat(result).apply {
             isNull()
         }
-    }
-
-    @Test
-    fun `trivial test`() {
-        val result = FakeLargeData.expectedSample.toTreeMap()
-
-        assertThat(result).apply {
-            hasSize(100)
-        }
-
-        val ceil =
-            result?.keys?.stream()?.filter {
-                it.startsWith(prefix = "b", ignoreCase = true)
-            }?.toList()
-
-        assertThat(result?.firstKey()).isEqualTo("Alupka")
-        assertThat(result?.lastKey()).isEqualTo("‘Azriqam")
-        assertThat(ceil).isEqualTo("wok")
-
-    }
-
-    private fun List<City>?.toTreeMap(): TreeMap<String, City>? {
-        if (this == null) return null
-        return TreeMap(this.associateBy { it.name })
     }
 }

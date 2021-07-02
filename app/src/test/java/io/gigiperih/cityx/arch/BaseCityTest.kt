@@ -1,7 +1,7 @@
 package io.gigiperih.cityx.arch
 
-import io.gigiperih.cityx.data.source.LocalResourceService
-import io.gigiperih.cityx.data.source.LocalResourceServiceTestImpl
+import io.gigiperih.cityx.data.service.LocalResourceService
+import io.gigiperih.cityx.data.service.LocalResourceServiceTestImpl
 
 open class BaseCityTest {
     protected val testService: LocalResourceService = LocalResourceServiceTestImpl()
@@ -15,6 +15,6 @@ open class BaseCityTest {
 //    protected val incompleteDataSet = service.get(file = "incomplete.json")
 //    protected val invalidDataSet = service.get(file = "invalid.json")
 
-    protected fun createSingleDataSet() = testService.get("city.json")
-    protected fun provideSmallDataSet() = testService.get("cities_2.json")
+//    protected fun provideSingleDataSet() = testService.get("city.json")
+//    protected fun provideSmallDataSet() = testService.get("cities_2.json")
 }

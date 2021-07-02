@@ -3,24 +3,21 @@ package io.gigiperih.cityx
 import com.google.common.truth.Truth.assertThat
 import com.squareup.moshi.JsonEncodingException
 import io.gigiperih.cityx.arch.BaseCityTest
+import io.gigiperih.cityx.data.City
+import io.gigiperih.cityx.data.Coordinate
 import io.gigiperih.cityx.data.repository.CityRepositoryImpl
-import io.gigiperih.cityx.data.source.LocalResourceService
 import io.gigiperih.cityx.domain.repository.CityRepository
-import io.mockk.every
-import io.mockk.mockk
 import io.mockk.unmockkAll
-import io.mockk.verify
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
 class CityRepositoryTest : BaseCityTest() {
-    var mockedService: LocalResourceService = mockk(relaxed = true)
     private lateinit var objectUnderTest: CityRepository
 
     @Before
     fun setUp() {
-        objectUnderTest = CityRepositoryImpl(mockedService)
+        objectUnderTest = CityRepositoryImpl(testService)
     }
 
     @After
@@ -34,190 +31,63 @@ class CityRepositoryTest : BaseCityTest() {
     }
 
     @Test
-    fun `given valid json file, when parsing is succeed, should return hashmap of cities`() {
-        // given
-        every { mockedService.get("cities_2.json") } returns provideSmallDataSet()
+    fun `given valid small json file, when parsing is succeed, should return sorted hashmap of cities`() {
+        val result = objectUnderTest.get(file = "cities_2.json")
 
-        // when
-        val result = objectUnderTest.get("cities_2.json")
-
-        // then
         assertThat(result[""]).apply {
-            isEqualTo(FakeData.expectedSample)
+            isEqualTo(FakeData.sortedSample)
             hasSize(2)
         }
-
-        verify { mockedService.get("cities_2.json") }
     }
 
     @Test
-    fun `given valid large json file, when parsing is succeed, should return correct list of cities`() {
-        //every { service.get("cities_20k.json") } returns largeDataSet
+    fun `given valid medium json file, when parsing is succeed, should return sorted hashmap of cities`() {
+        val result = objectUnderTest.get(file = "cities_100.json")
 
-        val result = objectUnderTest.get("cities_20k.json")
-
-        assertThat(result).apply {
-            hasSize(20000)
+        assertThat(result[""]).apply {
+            hasSize(100)
         }
 
-        verify { testService?.get("cities_20k.json") }
+        assertThat(result[""]!![0]).apply {
+            isEqualTo(
+                City(
+                    country = "UA", name = "Alupka", _id = 713514,
+                    coord = Coordinate(lat = 44.416668, lon = 34.049999)
+                )
+            )
+        }
+
+        assertThat(result[""]!![99]).apply {
+            isEqualTo(
+                City(
+                    country = "IL", name = "‘Azriqam", _id = 295582,
+                    coord = Coordinate(lat = 31.75, lon = 34.700001)
+                )
+            )
+        }
     }
 
     @Test
-    fun `given valid but incomplete json file, when parsing is failing, should return null`() {
-        //every { service.get("incomplete.json") } returns incompleteDataSet
+    fun `given valid large json file, when parsing is succeed, should return sorted hashmap of cities`() {
+        val result = objectUnderTest.get(file = "cities_100k.json")
 
-        val result = objectUnderTest.get("incomplete.json")
+        assertThat(result[""]).apply {
+            hasSize(100000)
+        }
+    }
+
+    @Test
+    fun `given valid but incomplete json file, when parsing is failing, should return empty`() {
+        val result = objectUnderTest.get(file = "incomplete.json")
 
         assertThat(result).apply {
-            isNull()
+            isEmpty()
         }
 
-        verify { testService?.get("incomplete.json") }
     }
 
     @Test(expected = JsonEncodingException::class)
     fun `given invalid json file, when parsing is failing, should throws JsonEncodingException`() {
-        //every { service.get("invalid.json") } returns invalidDataSet
-
-        objectUnderTest.get("invalid.json")
-    }
-
-    @Test
-    fun `given unsorted small list of city, when sorting is success, should return sorted list`() {
-//        every { service.get("cities_2.json") } returns smallDataSet
-//
-//        val unsortedList = objectUnderTest.get("cities_2.json")
-//        val result = unsortedList.sortAlphabetically()
-//
-//        assertThat(result).apply {
-//            isEqualTo(FakeData.sortedSample)
-//        }
-//
-//        verify { service.get("cities_2.json") }
-        TODO("Not yet implemented")
-    }
-
-    @Test
-    fun `given unsorted medium list of city, when sorting is success, should return sorted list`() {
-//        every { service.get("cities_100.json") } returns mediumDataSet
-//
-//        val unsortedList = objectUnderTest.get("cities_100.json")
-//        val result = unsortedList.sortAlphabetically()
-//
-//        assertThat(result).apply {
-//            hasSize(100)
-//        }
-//
-//        verify { service.get("cities_100.json") }
-        TODO("Not yet implemented")
-    }
-
-    @Test
-    fun `given unsorted large list of city, when sorting is success, should return sorted list`() {
-//        every { service.get("cities_20k.json") } returns largeDataSet
-//
-//        val unsortedList = objectUnderTest.get("cities_20k.json")
-//        val result = unsortedList.sortAlphabetically()
-//
-//        assertThat(result).apply {
-//            hasSize(20000)
-//        }
-//
-//        verify { service.get("cities_20k.json") }
-        TODO("Not yet implemented")
-    }
-
-    @Test
-    fun `given null value of city, when sorting is failing, should return null`() {
-//        every { service.get("incomplete.json") } returns incompleteDataSet
-//
-//        val unsortedList = objectUnderTest.get("incomplete.json")
-//        val result = unsortedList.sortAlphabetically()
-//
-//        assertThat(result).apply {
-//            isNull()
-//        }
-//
-//        verify { service.get("incomplete.json") }
-
-        TODO("Not yet implemented")
-    }
-
-    @Test
-    fun `given valid large json file, relative sorting time complexity should be better than linear`() {
-//        every { service.get("city.json") } returns singleDataSet
-//        every { service.get("cities_20k.json") } returns largeDataSet
-//
-//        val singleData = objectUnderTest.get("city.json")
-//        val largeData = objectUnderTest.get("cities_20k.json")
-//
-//        val singleDataExecTime = measureNanoTime {
-//            singleData.sortAlphabetically()
-//        }
-//
-//        val largeDataExecTime = measureNanoTime {
-//            largeData.sortAlphabetically()
-//        }
-//
-//        assertThat(singleData).hasSize(1)
-//        assertThat(largeData).hasSize(20000)
-//
-//        // verify time execution
-//        assertThat(singleDataExecTime).apply {
-//            isLessThan(largeDataExecTime)
-//        }
-//
-//        // linear time complexity:
-//        // if a list contains 1 element took ~1ns to complete
-//        // then 20k sized list should be ~20000ns
-//
-//        // requirement: should be better than linear time complexity: O(n)
-//        assertThat(largeDataExecTime).apply {
-//            isLessThan(singleDataExecTime * 20000)
-//        }
-//
-//        verify { service.get("city.json") }
-//        verify { service.get("cities_20k.json") }
-        TODO("Not yet implemented")
-    }
-
-    @Test
-    fun `given valid massive json file, relative sorting time complexity should be better than linear`() {
-//        every { service.get("city.json") } returns singleDataSet
-//        every { service.get("cities_110k.json") } returns massiveDataSet
-//
-//        val singleData = objectUnderTest.get("city.json")
-//        val massiveData = objectUnderTest.get("cities_110k.json")
-//
-//        val singleDataExecTime = measureNanoTime {
-//            singleData.sortAlphabetically()
-//        }
-//
-//        val massiveDataExecTime = measureNanoTime {
-//            massiveData.sortAlphabetically()
-//        }
-//
-//        assertThat(singleData).hasSize(1)
-//        assertThat(massiveData).hasSize(100000)
-//
-//        // verify time execution
-//        assertThat(singleDataExecTime).apply {
-//            isLessThan(massiveDataExecTime)
-//        }
-//
-//        // linear time complexity:
-//        // if a list contains 1 element took ~1ns to complete
-//        // then 110k sized list should be ~100000ns
-//
-//        // requirement: should be better than linear time complexity: O(n)
-//        assertThat(massiveDataExecTime).apply {
-//            isLessThan(singleDataExecTime * 100000)
-//        }
-//
-//        verify { service.get("city.json") }
-//        verify { service.get("cities_110k.json") }
-
-        TODO("Not yet implemented")
+        objectUnderTest.get(file = "invalid.json")
     }
 }

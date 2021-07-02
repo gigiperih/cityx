@@ -1,4 +1,4 @@
-package io.gigiperih.cityx.data.source
+package io.gigiperih.cityx.data.service
 
 import io.gigiperih.cityx.data.City
 

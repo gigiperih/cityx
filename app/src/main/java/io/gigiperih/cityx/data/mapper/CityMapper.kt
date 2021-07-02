@@ -8,7 +8,7 @@ object CityMapper {
 
         val hash = hashMapOf<String, City>()
         this.map {
-            // maf city + country as hash key
+            // map city + country as hash key
             hash["${it.name} ${it.country}"] = it
         }
         return hash

@@ -5,6 +5,7 @@ import io.gigiperih.cityx.arch.BaseCityTest
 import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.data.mapper.CityMapper.toHashMap
 import org.junit.Test
+import java.util.*
 
 class CityMapperTest {
 
@@ -37,5 +38,20 @@ class CityMapperTest {
         assertThat(result).apply {
             isNull()
         }
+    }
+
+    @Test
+    fun `trivial test`() {
+        val result = FakeLargeData.expectedSample.toTreeMap()
+
+        assertThat(result).apply {
+            hasSize(69)
+        }
+
+    }
+
+    private fun List<City>?.toTreeMap(): TreeMap<String, City>? {
+        if (this == null) return null
+        return TreeMap(this.associateBy { it.name })
     }
 }

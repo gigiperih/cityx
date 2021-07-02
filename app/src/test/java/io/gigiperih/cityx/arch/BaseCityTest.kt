@@ -6,6 +6,7 @@ open class BaseCityTest {
     protected val mediumDataSet = getResource(fileName = "cities_100.json")
     protected val largeDataSet = getResource(fileName = "cities_20k.json")
     protected val massiveDataSet = getResource(fileName = "cities_100k.json")
+    protected val massiveSortedDataSet = getResource(fileName = "cities_100k.json")
     protected val incompleteDataSet = getResource(fileName = "incomplete.json")
     protected val invalidDataSet = getResource(fileName = "invalid.json")
 

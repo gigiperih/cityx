@@ -7,7 +7,11 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.data.mapper.sortAlphabetically
 
-class LocalResourceServiceImpl : LocalResourceService {
+/**
+ * it's kinda hard to mock large data :)
+ * this class provide similar implementation of actual class
+ */
+class LocalResourceServiceTestImpl : LocalResourceService {
     override fun get(file: String): List<City>? {
         return try {
             val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
@@ -16,7 +20,7 @@ class LocalResourceServiceImpl : LocalResourceService {
 
             // return sorted
             this::class.java.classLoader?.getResource(file)?.readText()
-                ?.let { adapter.fromJson(it) }.sortAlphabetically()
+                ?.let { adapter.fromJson(it) }
         } catch (e: JsonDataException) {
             null
         }

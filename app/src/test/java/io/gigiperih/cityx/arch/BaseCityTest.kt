@@ -1,17 +1,20 @@
 package io.gigiperih.cityx.arch
 
-open class BaseCityTest {
-    protected val singleDataSet = getResource(fileName = "city.json")
-    protected val smallDataSet = getResource(fileName = "cities_2.json")
-    protected val mediumDataSet = getResource(fileName = "cities_100.json")
-    protected val largeDataSet = getResource(fileName = "cities_20k.json")
-    protected val massiveDataSet = getResource(fileName = "cities_100k.json")
-    protected val massiveSortedDataSet = getResource(fileName = "cities_100k.json")
-    protected val incompleteDataSet = getResource(fileName = "incomplete.json")
-    protected val invalidDataSet = getResource(fileName = "invalid.json")
+import io.gigiperih.cityx.data.source.LocalResourceService
+import io.gigiperih.cityx.data.source.LocalResourceServiceTestImpl
 
-    // TODO: refactor
-    // replicate actual parsing mechanism
-    private fun getResource(fileName: String) =
-        this::class.java.classLoader?.getResource(fileName)?.readText()
+open class BaseCityTest {
+    protected val testService: LocalResourceService = LocalResourceServiceTestImpl()
+
+//    protected val singleDataSet = service.get(file = "city.json")
+//    protected val smallDataSet = service.get(file = "cities_2.json")
+//    protected val mediumDataSet = service.get(file = "cities_100.json")
+//    protected val largeDataSet = service.get(file = "cities_20k.json")
+//    protected val massiveDataSet = service.get(file = "cities_100k.json")
+//    protected val massiveSortedDataSet = service.get(file = "cities_100k.json")
+//    protected val incompleteDataSet = service.get(file = "incomplete.json")
+//    protected val invalidDataSet = service.get(file = "invalid.json")
+
+    protected fun createSingleDataSet() = testService.get("city.json")
+    protected fun provideSmallDataSet() = testService.get("cities_2.json")
 }

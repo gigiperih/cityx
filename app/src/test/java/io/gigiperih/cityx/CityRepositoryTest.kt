@@ -77,6 +77,6 @@ class CityRepositoryTest : BaseCityTest() {
         val result = objectUnderTest.get(file = "cities_100k.json")
         val trie = objectUnderTest.getTrie(result)
 
-        assertThat(trie.traverse(trie.startsNode("ba"))).isEqualTo("")
+        assertThat(trie.traverse(trie.filterPrefix("ba"))).hasSize(1764)
     }
 }

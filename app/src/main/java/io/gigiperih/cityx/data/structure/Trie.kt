@@ -1,10 +1,17 @@
-package io.gigiperih.cityx.data
+package io.gigiperih.cityx.data.structure
 
+import io.gigiperih.cityx.data.City
 
+/**
+ * Trie implementation to tackle faster runtime search problems
+ *
+ * references:
+ * - https://www.youtube.com/watch?v=zIjfhVPRZCg
+ * - https://gist.github.com/sagar-viradiya/891cf7d08b6ac13bb1fbdc411b76f6a5
+ * - https://github.com/kennycason/trie_kotlin
+ */
 class Trie {
-
     data class Node(
-        var word: String? = null,
         var city: City? = null,
         val childNodes: MutableMap<Char, Node> = mutableMapOf(),
     )
@@ -20,18 +27,6 @@ class Trie {
             currentNode = currentNode.childNodes[char]!!
         }
         currentNode.city = city
-        currentNode.word = word
-    }
-
-    fun search(word: String): Boolean {
-        var currentNode = root
-        for (char in word) {
-            if (currentNode.childNodes[char] == null) {
-                return false
-            }
-            currentNode = currentNode.childNodes[char]!!
-        }
-        return currentNode.city != null
     }
 
     fun startsWith(word: String): Boolean {
@@ -45,7 +40,10 @@ class Trie {
         return currentNode.city == null
     }
 
-    fun startsNode(word: String): Node? {
+    fun filterPrefix(word: String): Node? {
+        // TODO: handle empty keywords
+        // do not waste time by traversing with empty keywords
+        // just return default list
         var currentNode = root
         for (char in word) {
             if (currentNode.childNodes[char] == null) {
@@ -60,7 +58,7 @@ class Trie {
     fun traverse(node: Node?): List<String> {
         val list = mutableListOf<String>()
         if (node?.city != null) {
-            list.add("${node.word}:${node.city}")
+            list.add("${node.city?.name}:${node.city?.country}")
         }
 
         if (!node?.childNodes.isNullOrEmpty()) {

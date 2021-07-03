@@ -11,7 +11,6 @@ import io.gigiperih.cityx.data.structure.Trie
 class LocalResourceServiceImpl : LocalResourceService {
     companion object {
         const val DEFAULT_FILE = "cities_100k.json"
-        const val DEFAULT_OFFSET = 10
     }
 
     private val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()

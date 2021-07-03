@@ -1,21 +1,22 @@
-package io.gigiperih.cityx
+package io.gigiperih.cityx.data.repository
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.moshi.JsonEncodingException
-import io.gigiperih.cityx.arch.BaseCityTest
-import io.gigiperih.cityx.data.repository.CityRepositoryImpl
+import io.gigiperih.cityx.data.service.LocalResourceService
 import io.gigiperih.cityx.domain.repository.CityRepository
+import io.mockk.mockk
 import io.mockk.unmockkAll
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class CityRepositoryTest : BaseCityTest() {
+class CityRepositoryTest {
+    var mockedService = mockk<LocalResourceService>()
     private lateinit var objectUnderTest: CityRepository
 
     @Before
     fun setUp() {
-        objectUnderTest = CityRepositoryImpl(testService)
+        objectUnderTest = CityRepositoryImpl(mockedService)
     }
 
     @After

@@ -11,6 +11,7 @@ import io.mockk.unmockkAll
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import java.util.*
 
 class CityRepositoryTest : BaseCityTest() {
     private lateinit var objectUnderTest: CityRepository
@@ -89,5 +90,18 @@ class CityRepositoryTest : BaseCityTest() {
     @Test(expected = JsonEncodingException::class)
     fun `given invalid json file, when parsing is failing, should throws JsonEncodingException`() {
         objectUnderTest.get(file = "invalid.json")
+    }
+
+    @Test
+    fun `trivial test for trie`() {
+        val trie = objectUnderTest.getTrie()
+        trie.add("gilang".toList())
+        trie.add("gigi".toList())
+        trie.add("ablahu".toList())
+        trie.add("abku".toList())
+
+        val result = trie.search("gi".toList())
+
+        assertThat(result).isEqualTo("")
     }
 }

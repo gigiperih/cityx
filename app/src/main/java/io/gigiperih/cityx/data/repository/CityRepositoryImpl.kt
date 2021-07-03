@@ -1,6 +1,7 @@
 package io.gigiperih.cityx.data.repository
 
 import io.gigiperih.cityx.data.City
+import io.gigiperih.cityx.data.Trie
 import io.gigiperih.cityx.data.service.LocalResourceService
 import io.gigiperih.cityx.domain.repository.CityRepository
 
@@ -30,4 +31,6 @@ class CityRepositoryImpl(private val localResourceService: LocalResourceService)
 
         return map
     }
+
+    override fun getTrie() = Trie<Char>()
 }

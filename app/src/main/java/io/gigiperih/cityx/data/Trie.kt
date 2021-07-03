@@ -5,13 +5,13 @@ class Trie {
 
     data class Node(
         var word: String? = null,
-        var id: Int? = null,
+        var city: City? = null,
         val childNodes: MutableMap<Char, Node> = mutableMapOf(),
     )
 
     private val root = Node()
 
-    fun insert(word: String, id: Int?) {
+    fun insert(word: String, city: City?) {
         var currentNode = root
         for (char in word) {
             if (currentNode.childNodes[char] == null) {
@@ -19,7 +19,7 @@ class Trie {
             }
             currentNode = currentNode.childNodes[char]!!
         }
-        currentNode.id = id
+        currentNode.city = city
         currentNode.word = word
     }
 
@@ -31,7 +31,7 @@ class Trie {
             }
             currentNode = currentNode.childNodes[char]!!
         }
-        return currentNode.id != null
+        return currentNode.city != null
     }
 
     fun startsWith(word: String): Boolean {
@@ -42,7 +42,7 @@ class Trie {
             }
             currentNode = currentNode.childNodes[char]!!
         }
-        return currentNode.id == null
+        return currentNode.city == null
     }
 
     fun startsNode(word: String): Node? {
@@ -59,8 +59,8 @@ class Trie {
 
     fun traverse(node: Node?): List<String> {
         val list = mutableListOf<String>()
-        if (node?.id != null) {
-            list.add("${node.word}:${node.id}")
+        if (node?.city != null) {
+            list.add("${node.word}:${node.city}")
         }
 
         if (!node?.childNodes.isNullOrEmpty()) {

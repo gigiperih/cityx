@@ -3,8 +3,6 @@ package io.gigiperih.cityx
 import com.google.common.truth.Truth.assertThat
 import com.squareup.moshi.JsonEncodingException
 import io.gigiperih.cityx.arch.BaseCityTest
-import io.gigiperih.cityx.data.City
-import io.gigiperih.cityx.data.Coordinate
 import io.gigiperih.cityx.data.repository.CityRepositoryImpl
 import io.gigiperih.cityx.domain.repository.CityRepository
 import io.mockk.unmockkAll
@@ -34,7 +32,7 @@ class CityRepositoryTest : BaseCityTest() {
     fun `given valid small json file, when parsing is succeed, should return sorted hashmap of cities`() {
         val result = objectUnderTest.get(file = "cities_2.json")
 
-        assertThat(result[""]).apply {
+        assertThat(result).apply {
             isEqualTo(FakeData.sortedSample)
             hasSize(2)
         }
@@ -44,26 +42,9 @@ class CityRepositoryTest : BaseCityTest() {
     fun `given valid medium json file, when parsing is succeed, should return sorted hashmap of cities`() {
         val result = objectUnderTest.get(file = "cities_100.json")
 
-        assertThat(result[""]).apply {
+        // TODO add more checking
+        assertThat(result).apply {
             hasSize(100)
-        }
-
-        assertThat(result[""]!![0]).apply {
-            isEqualTo(
-                City(
-                    country = "UA", name = "Alupka", _id = 713514,
-                    coord = Coordinate(lat = 44.416668, lon = 34.049999)
-                )
-            )
-        }
-
-        assertThat(result[""]!![99]).apply {
-            isEqualTo(
-                City(
-                    country = "IL", name = "‘Azriqam", _id = 295582,
-                    coord = Coordinate(lat = 31.75, lon = 34.700001)
-                )
-            )
         }
     }
 
@@ -71,17 +52,17 @@ class CityRepositoryTest : BaseCityTest() {
     fun `given valid large json file, when parsing is succeed, should return sorted hashmap of cities`() {
         val result = objectUnderTest.get(file = "cities_100k.json")
 
-        assertThat(result[""]).apply {
+        assertThat(result).apply {
             hasSize(100000)
         }
     }
 
     @Test
-    fun `given valid but incomplete json file, when parsing is failing, should return empty`() {
+    fun `given valid but incomplete json file, when parsing is failing, should return null`() {
         val result = objectUnderTest.get(file = "incomplete.json")
 
         assertThat(result).apply {
-            isEmpty()
+            isNull()
         }
 
     }
@@ -93,18 +74,9 @@ class CityRepositoryTest : BaseCityTest() {
 
     @Test
     fun `trivial test for trie`() {
-        val trie = objectUnderTest.getTrie()
-        trie.insert("gilang", 10)
-        trie.insert("gigi", 1)
+        val result = objectUnderTest.get(file = "cities_100k.json")
+        val trie = objectUnderTest.getTrie(result)
 
-        trie.insert("abigail", 45)
-        trie.insert("abku", 420)
-        trie.insert("abkun", 21)
-        trie.insert("ablahu", 66)
-        trie.insert("abor", 2)
-
-        assertThat(trie.startsWith("ab")).isTrue()
-        //assertThat(trie.startsNode("abku")).isEqualTo("")
-        assertThat(trie.traverse(trie.startsNode("abk"))).isEqualTo("")
+        assertThat(trie.traverse(trie.startsNode("ba"))).isEqualTo("")
     }
 }

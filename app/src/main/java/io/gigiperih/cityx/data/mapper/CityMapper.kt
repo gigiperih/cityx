@@ -8,7 +8,7 @@ fun List<City>?.toHashMap(): HashMap<String, City>? {
     val hash = hashMapOf<String, City>()
     this.map {
         // map city + country as hash key
-        hash["${it.name} ${it.country}"] = it
+        hash[it.name] = it
     }
     return hash
 }

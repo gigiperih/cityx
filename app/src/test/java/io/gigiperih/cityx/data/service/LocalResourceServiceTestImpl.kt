@@ -10,6 +10,8 @@ import io.gigiperih.cityx.data.mapper.sortAlphabetically
 /**
  * it's kinda hard to mock large data :)
  * this class provide similar implementation of actual class
+ *
+ * TODO: refactor for mocking after abstraction processes completed
  */
 class LocalResourceServiceTestImpl : LocalResourceService {
     override fun get(file: String): List<City>? {

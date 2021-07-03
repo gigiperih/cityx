@@ -11,7 +11,7 @@ class CityRepositoryImpl(private val localResourceService: LocalResourceService)
         return localResourceService.get(file)?.sortAlphabetically()
     }
 
-    override fun getTrie(cities: List<City>?): Trie {
+    override fun buildTrie(cities: List<City>?): Trie {
         val trie = Trie()
         cities?.forEach {
             trie.insert("${it.name} ${it.country}".lowercase(), it)

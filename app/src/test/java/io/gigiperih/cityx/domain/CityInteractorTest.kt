@@ -1,8 +1,14 @@
 package io.gigiperih.cityx.domain
 
 import com.google.common.truth.Truth.assertThat
+import com.squareup.moshi.JsonDataException
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.data.Coordinate
+import io.gigiperih.cityx.data.mapper.sortAlphabetically
+import io.gigiperih.cityx.data.structure.Trie
 import io.gigiperih.cityx.domain.interactor.CityInteractor
 import io.gigiperih.cityx.domain.interactor.CityInteractorImpl
 import io.gigiperih.cityx.domain.repository.CityRepository
@@ -79,21 +85,79 @@ class CityInteractorTest {
 
     @Test
     fun `given multi page of results, when page selected, returns correct chunked list of cities`() {
-        TODO("Not yet implemented")
+        every { mockedRepo.getList() } returns buildListOfCities("cities_99.json")
+
+        val firstPage = objectUnderTest.search(keywords = "", page = 1)
+        val lastPage = objectUnderTest.search(keywords = "", page = 10)
+
+        assertThat(firstPage).apply {
+            isNotEmpty()
+            hasSize(10)
+        }
+
+        assertThat(lastPage).apply {
+            isNotEmpty()
+            hasSize(9)
+        }
+
+        verify { mockedRepo.getList() }
+        verify(exactly = 0) { mockedRepo.getTrie() }
     }
 
     @Test
     fun `given large data, when search without param is success, returns default list without process`() {
-        TODO("Not yet implemented")
+        every { mockedRepo.getList() } returns buildListOfCities("cities_100k.json")
+
+        val result = objectUnderTest.search(keywords = "", page = 1)
+
+        assertThat(result).apply {
+            isNotEmpty()
+            hasSize(10)
+        }
+
+        verify { mockedRepo.getList() }
+        verify(exactly = 0) { mockedRepo.getTrie() }
     }
 
     @Test
     fun `given large data, when search with param is success, return list of results`() {
-        TODO("Not yet implemented")
+        every { mockedRepo.getTrie() } returns buildListOfCities("cities_100k.json").buildTrie()
+
+        val result = objectUnderTest.search(keywords = "Ab", page = 1)
+
+        assertThat(result).apply {
+            isNotEmpty()
+            hasSize(10)
+        }
+
+        verify { mockedRepo.getTrie() }
     }
 
     @Test
-    fun `given large data, when search with param is success, return empty list`() {
+    fun `given large data, when search with param is failing, return empty list`() {
         TODO("Not yet implemented")
+    }
+
+    private fun buildListOfCities(file: String): List<City>? {
+        val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+        val listType = Types.newParameterizedType(List::class.java, City::class.java)
+        val adapter = moshi.adapter<List<City>>(listType)
+
+        return try {
+            this::class.java.classLoader?.getResource(file)
+                ?.readText()
+                ?.let { adapter.fromJson(it) }.sortAlphabetically()
+        } catch (e: JsonDataException) {
+            null
+        }
+    }
+
+    fun List<City>?.buildTrie(): Trie {
+        val trie = Trie()
+        this?.forEach {
+            trie.insert("${it.name} ${it.country}", it)
+        }
+
+        return trie
     }
 }

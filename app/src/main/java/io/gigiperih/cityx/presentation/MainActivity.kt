@@ -1,8 +1,9 @@
-package io.gigiperih.cityx
+package io.gigiperih.cityx.presentation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
+import io.gigiperih.cityx.R
 
 
 class MainActivity : AppCompatActivity() {

@@ -65,7 +65,7 @@ class CityInteractorTest {
     }
 
     @Test
-    fun `given search param is not empty, when result is not found, should returns null`() {
+    fun `given search param is not empty, when result is not found, returns empty list`() {
         every { mockedRepo.getTrie() } returns FakeData.sortedTrie
 
         val result = objectUnderTest.search(keywords = "69", page = 1)
@@ -75,5 +75,25 @@ class CityInteractorTest {
         }
 
         verify { mockedRepo.getTrie() }
+    }
+
+    @Test
+    fun `given multi page of results, when page selected, returns correct chunked list of cities`() {
+        TODO("Not yet implemented")
+    }
+
+    @Test
+    fun `given large data, when search without param is success, returns default list without process`() {
+        TODO("Not yet implemented")
+    }
+
+    @Test
+    fun `given large data, when search with param is success, return list of results`() {
+        TODO("Not yet implemented")
+    }
+
+    @Test
+    fun `given large data, when search with param is success, return empty list`() {
+        TODO("Not yet implemented")
     }
 }

@@ -10,7 +10,7 @@ import io.gigiperih.cityx.data.structure.Trie
 
 class LocalResourceServiceImpl : LocalResourceService {
     companion object {
-        const val DEFAULT_FILE = "data.json"
+        const val DEFAULT_FILE = "cities_100k.json"
         const val DEFAULT_OFFSET = 10
     }
 
@@ -35,11 +35,11 @@ class LocalResourceServiceImpl : LocalResourceService {
         }
     }
 
-    override fun get(): List<City>? {
+    override fun getList(): List<City>? {
         return cities
     }
 
-    override fun search(keywords: String?): Trie {
+    override fun getTrie(): Trie {
         return trie
     }
 }

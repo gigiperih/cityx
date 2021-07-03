@@ -9,10 +9,10 @@ class CityRepositoryImpl(
     private val localResourceService: LocalResourceService
 ) : CityRepository {
     override fun get(page: Int): List<City>? {
-        return localResourceService.get(page)
+        return localResourceService.getList()
     }
 
     override fun search(keywords: String?, page: Int): Trie {
-        return localResourceService.search(keywords, page)
+        return localResourceService.getTrie()
     }
 }

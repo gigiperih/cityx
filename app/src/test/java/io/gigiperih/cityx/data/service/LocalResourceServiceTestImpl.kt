@@ -36,11 +36,11 @@ class LocalResourceServiceTestImpl(file: String) : LocalResourceService {
         }
     }
 
-    override fun get(): List<City>? {
+    override fun getList(): List<City>? {
         return cities
     }
 
-    override fun search(keywords: String?): Trie {
+    override fun getTrie(): Trie {
         return trie
     }
 }

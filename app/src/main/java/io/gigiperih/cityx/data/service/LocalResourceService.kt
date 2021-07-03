@@ -4,7 +4,7 @@ import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.data.structure.Trie
 
 interface LocalResourceService {
-    fun get(): List<City>?
+    fun getList(): List<City>?
 
-    fun search(keywords: String?): Trie
+    fun getTrie(): Trie
 }

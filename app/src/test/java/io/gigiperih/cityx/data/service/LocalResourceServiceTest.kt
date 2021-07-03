@@ -2,15 +2,16 @@ package io.gigiperih.cityx.data.service
 
 import com.google.common.truth.Truth.assertThat
 import io.gigiperih.cityx.FakeData
+import io.gigiperih.cityx.data.structure.Trie
 import org.junit.Test
 
 class LocalResourceServiceTest {
     private lateinit var objectUnderTest: LocalResourceService
 
     @Test
-    fun `given valid small json file, when parsing is success, should return correct list of cities`() {
+    fun `given valid small json file, when getList() is success, should return list of cities`() {
         objectUnderTest = LocalResourceServiceTestImpl("cities_2.json")
-        val result = objectUnderTest.get(page = 1)
+        val result = objectUnderTest.getList()
 
         assertThat(result).apply {
             hasSize(2)
@@ -20,34 +21,35 @@ class LocalResourceServiceTest {
     }
 
     @Test
-    fun `given valid json file, when parsing is success, should return chunked list of cities`() {
+    fun `given valid medium json file, when getList() is success, should return list of cities`() {
         objectUnderTest = LocalResourceServiceTestImpl("cities_99.json")
-        val firstPage = objectUnderTest.get(page = 1)
-        val lastPage = objectUnderTest.get(page = 10)
+        val result = objectUnderTest.getList()
 
-        assertThat(firstPage).apply {
-            hasSize(10)
-        }
-
-        assertThat(lastPage).apply {
-            hasSize(9)
+        assertThat(result).apply {
+            hasSize(99)
         }
 
     }
 
     @Test
-    fun `given valid large json file, when parsing is success, should return chunked list of cities`() {
+    fun `given valid large json file, when getList() is success, should return list of cities`() {
         objectUnderTest = LocalResourceServiceTestImpl("cities_100k.json")
-        val firstPage = objectUnderTest.get(page = 1)
-        val lastPage = objectUnderTest.get(page = 10)
+        val result = objectUnderTest.getList()
 
-        assertThat(firstPage).apply {
-            hasSize(10)
+        assertThat(result).apply {
+            hasSize(100000)
         }
 
-        assertThat(lastPage).apply {
-            hasSize(9)
-        }
+    }
 
+    @Test
+    fun `given valid large json file, when getTrie() is invoked, should return trie of cities`() {
+        objectUnderTest = LocalResourceServiceTestImpl("cities_100k.json")
+        val result = objectUnderTest.getTrie()
+
+        assertThat(result).apply {
+            isNotNull()
+            isInstanceOf(Trie::class.java)
+        }
     }
 }

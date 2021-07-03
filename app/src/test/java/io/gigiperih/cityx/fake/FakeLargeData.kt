@@ -1,4 +1,4 @@
-package io.gigiperih.cityx
+package io.gigiperih.cityx.fake
 
 import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.data.Coordinate

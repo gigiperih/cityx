@@ -1,11 +1,13 @@
 package io.gigiperih.cityx.data.repository
 
 import com.google.common.truth.Truth.assertThat
-import com.squareup.moshi.JsonEncodingException
 import io.gigiperih.cityx.data.service.LocalResourceService
 import io.gigiperih.cityx.domain.repository.CityRepository
+import io.gigiperih.cityx.fake.FakeData
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
+import io.mockk.verify
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -30,64 +32,30 @@ class CityRepositoryTest {
     }
 
     @Test
-    fun `given valid small json file, when parsing is succeed, should return sorted hashmap of cities`() {
-//        val result = objectUnderTest.get(file = "cities_2.json")
-//
-//        assertThat(result).apply {
-//            isEqualTo(FakeData.sortedSample)
-//            hasSize(2)
-//        }
+    fun `given valid request, when getList is success, should return expected list of cities`() {
+        every { mockedService.getList() } returns FakeData.sortedSample
 
-        TODO("Not yet implemented")
+        val result = objectUnderTest.getList()
+
+        assertThat(result).apply {
+            isEqualTo(FakeData.sortedSample)
+            hasSize(2)
+        }
+
+        verify { mockedService.getList() }
     }
 
     @Test
-    fun `given valid medium json file, when parsing is succeed, should return sorted hashmap of cities`() {
-//        val result = objectUnderTest.get(file = "cities_100.json")
-//
-//        // TODO add more checking
-//        assertThat(result).apply {
-//            hasSize(100)
-//        }
+    fun `given valid request, when getTrie is success, should return expected trie of cities`() {
+        every { mockedService.getTrie() } returns FakeData.sortedTrie
 
-        TODO("Not yet implemented")
-    }
+        val result = objectUnderTest.getTrie()
 
-    @Test
-    fun `given valid large json file, when parsing is succeed, should return sorted hashmap of cities`() {
-//        val result = objectUnderTest.get(file = "cities_100k.json")
-//
-//        assertThat(result).apply {
-//            hasSize(100000)
-//        }
+        assertThat(result).apply {
+            isNotNull()
+            isEqualTo(FakeData.sortedTrie)
+        }
 
-        TODO("Not yet implemented")
-    }
-
-    @Test
-    fun `given valid but incomplete json file, when parsing is failing, should return null`() {
-//        val result = objectUnderTest.get(file = "incomplete.json")
-//
-//        assertThat(result).apply {
-//            isNull()
-//        }
-
-        TODO("Not yet implemented")
-    }
-
-    @Test(expected = JsonEncodingException::class)
-    fun `given invalid json file, when parsing is failing, should throws JsonEncodingException`() {
-        //objectUnderTest.get(file = "invalid.json")
-        TODO("Not yet implemented")
-    }
-
-    @Test
-    fun `trivial test for trie`() {
-//        val result = objectUnderTest.get(file = "cities_100k.json")
-//        val trie = objectUnderTest.buildTrie(result)
-//
-//        assertThat(trie.traverse(trie.filterPrefix(""))).hasSize(1764)
-
-        TODO("Not yet implemented")
+        verify { mockedService.getTrie() }
     }
 }

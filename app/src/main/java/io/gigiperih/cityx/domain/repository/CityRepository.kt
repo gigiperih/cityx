@@ -4,7 +4,7 @@ import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.data.structure.Trie
 
 interface CityRepository {
-    fun get(page: Int): List<City>?
+    fun getList(): List<City>?
 
-    fun search(keywords: String?, page: Int): Trie
+    fun getTrie(): Trie
 }

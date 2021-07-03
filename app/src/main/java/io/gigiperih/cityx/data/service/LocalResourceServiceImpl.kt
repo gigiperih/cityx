@@ -5,19 +5,41 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.gigiperih.cityx.data.City
+import io.gigiperih.cityx.data.mapper.sortAlphabetically
+import io.gigiperih.cityx.data.structure.Trie
 
 class LocalResourceServiceImpl : LocalResourceService {
-    override fun get(file: String): List<City>? {
-        return try {
-            val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
-            val listType = Types.newParameterizedType(List::class.java, City::class.java)
-            val adapter = moshi.adapter<List<City>>(listType)
+    companion object {
+        const val DEFAULT_FILE = "data.json"
+        const val DEFAULT_OFFSET = 10
+    }
 
-            // return sorted
-            this::class.java.classLoader?.getResource(file)?.readText()
-                ?.let { adapter.fromJson(it) }
+    private val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+    private val listType = Types.newParameterizedType(List::class.java, City::class.java)
+    private val adapter = moshi.adapter<List<City>>(listType)
+    private var cities: List<City>? = null
+    private val trie = Trie()
+
+    init {
+        // parse list
+        cities = try {
+            this::class.java.classLoader?.getResource(DEFAULT_FILE)?.readText()
+                ?.let { adapter.fromJson(it) }.sortAlphabetically()
         } catch (e: JsonDataException) {
             null
         }
+
+        // build trie
+        cities?.forEach {
+            trie.insert("${it.name} ${it.country}", it)
+        }
+    }
+
+    override fun get(): List<City>? {
+        return cities
+    }
+
+    override fun search(keywords: String?): Trie {
+        return trie
     }
 }

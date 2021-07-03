@@ -30,53 +30,63 @@ class CityRepositoryTest : BaseCityTest() {
 
     @Test
     fun `given valid small json file, when parsing is succeed, should return sorted hashmap of cities`() {
-        val result = objectUnderTest.get(file = "cities_2.json")
+//        val result = objectUnderTest.get(file = "cities_2.json")
+//
+//        assertThat(result).apply {
+//            isEqualTo(FakeData.sortedSample)
+//            hasSize(2)
+//        }
 
-        assertThat(result).apply {
-            isEqualTo(FakeData.sortedSample)
-            hasSize(2)
-        }
+        TODO("Not yet implemented")
     }
 
     @Test
     fun `given valid medium json file, when parsing is succeed, should return sorted hashmap of cities`() {
-        val result = objectUnderTest.get(file = "cities_100.json")
+//        val result = objectUnderTest.get(file = "cities_100.json")
+//
+//        // TODO add more checking
+//        assertThat(result).apply {
+//            hasSize(100)
+//        }
 
-        // TODO add more checking
-        assertThat(result).apply {
-            hasSize(100)
-        }
+        TODO("Not yet implemented")
     }
 
     @Test
     fun `given valid large json file, when parsing is succeed, should return sorted hashmap of cities`() {
-        val result = objectUnderTest.get(file = "cities_100k.json")
+//        val result = objectUnderTest.get(file = "cities_100k.json")
+//
+//        assertThat(result).apply {
+//            hasSize(100000)
+//        }
 
-        assertThat(result).apply {
-            hasSize(100000)
-        }
+        TODO("Not yet implemented")
     }
 
     @Test
     fun `given valid but incomplete json file, when parsing is failing, should return null`() {
-        val result = objectUnderTest.get(file = "incomplete.json")
+//        val result = objectUnderTest.get(file = "incomplete.json")
+//
+//        assertThat(result).apply {
+//            isNull()
+//        }
 
-        assertThat(result).apply {
-            isNull()
-        }
-
+        TODO("Not yet implemented")
     }
 
     @Test(expected = JsonEncodingException::class)
     fun `given invalid json file, when parsing is failing, should throws JsonEncodingException`() {
-        objectUnderTest.get(file = "invalid.json")
+        //objectUnderTest.get(file = "invalid.json")
+        TODO("Not yet implemented")
     }
 
     @Test
     fun `trivial test for trie`() {
-        val result = objectUnderTest.get(file = "cities_100k.json")
-        val trie = objectUnderTest.buildTrie(result)
+//        val result = objectUnderTest.get(file = "cities_100k.json")
+//        val trie = objectUnderTest.buildTrie(result)
+//
+//        assertThat(trie.traverse(trie.filterPrefix(""))).hasSize(1764)
 
-        assertThat(trie.traverse(trie.filterPrefix("ba"))).hasSize(1764)
+        TODO("Not yet implemented")
     }
 }

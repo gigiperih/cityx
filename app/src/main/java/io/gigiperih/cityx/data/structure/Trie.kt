@@ -55,18 +55,18 @@ class Trie {
         return currentNode
     }
 
-    fun traverse(node: Node?): List<String> {
-        val list = mutableListOf<String>()
-        if (node?.city != null) {
-            list.add("${node.city?.name}:${node.city?.country}")
-        }
-
-        if (!node?.childNodes.isNullOrEmpty()) {
-            node?.childNodes?.forEach {
-                list += traverse(it.value)
-            }
-        }
-
-        return list
-    }
+//    fun traverse(node: Node?): List<String> {
+//        val list = mutableListOf<String>()
+//        if (node?.city != null) {
+//            list.add("${node.city?.name}:${node.city?.country}")
+//        }
+//
+//        if (!node?.childNodes.isNullOrEmpty()) {
+//            node?.childNodes?.forEach {
+//                list += traverse(it.value)
+//            }
+//        }
+//
+//        return list
+//    }
 }

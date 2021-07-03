@@ -6,5 +6,5 @@ import io.gigiperih.cityx.data.Trie
 interface CityRepository {
     fun get(file: String): HashMap<String, MutableList<City>>
 
-    fun getTrie(): Trie<Char>
+    fun getTrie(): Trie
 }

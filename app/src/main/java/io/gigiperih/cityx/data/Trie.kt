@@ -1,65 +1,74 @@
 package io.gigiperih.cityx.data
 
-class Trie<T>(val root: Node<T> = Node<T>(null, false)) {
 
-    fun add(values: List<T>) {
-        var children = root.children
+class Trie {
 
-        values.forEachIndexed { i, value ->
-            val isLeaf = i == values.size - 1
-            // add new node
-            if (!children.contains(value)) {
-                val node = Node<T>(value, isLeaf)
-                children[value] = node
-                children = node.children
+    data class Node(
+        var word: String? = null,
+        var id: Int? = null,
+        val childNodes: MutableMap<Char, Node> = mutableMapOf(),
+    )
 
-            } else {
-                // exist, so traverse current path + set isLeaf if needed
-                val node = children[value]!!
-                if (isLeaf) {
-                    node.isLeaf = isLeaf
-                }
-                children = node.children
+    private val root = Node()
+
+    fun insert(word: String, id: Int?) {
+        var currentNode = root
+        for (char in word) {
+            if (currentNode.childNodes[char] == null) {
+                currentNode.childNodes[char] = Node()
             }
+            currentNode = currentNode.childNodes[char]!!
         }
+        currentNode.id = id
+        currentNode.word = word
     }
 
-    fun contains(values: List<T>): Boolean {
-        return search(values) != null
+    fun search(word: String): Boolean {
+        var currentNode = root
+        for (char in word) {
+            if (currentNode.childNodes[char] == null) {
+                return false
+            }
+            currentNode = currentNode.childNodes[char]!!
+        }
+        return currentNode.id != null
     }
 
-    fun search(values: List<T>): Node<T>? {
-        var children = root.children
-        if (children.isEmpty()) {
-            return null
+    fun startsWith(word: String): Boolean {
+        var currentNode = root
+        for (char in word) {
+            if (currentNode.childNodes[char] == null) {
+                return false
+            }
+            currentNode = currentNode.childNodes[char]!!
         }
+        return currentNode.id == null
+    }
 
-        values.forEachIndexed { i, value ->
-            val isLeaf = i == values.size - 1
-            // add new node
-            if (!children.contains(value)) {
+    fun startsNode(word: String): Node? {
+        var currentNode = root
+        for (char in word) {
+            if (currentNode.childNodes[char] == null) {
                 return null
+            }
+            currentNode = currentNode.childNodes[char]!!
+        }
 
-            } else {
-                // exist, so traverse current path, ending if is last value, and is leaf node
-                val node = children[value]!!
-                if (isLeaf) {
-                    return if (node.isLeaf) {
-                        node
-                    } else {
-                        null
-                    }
-                }
-                // not at end, continue traversing
-                children = node.children
+        return currentNode
+    }
+
+    fun traverse(node: Node?): List<String> {
+        val list = mutableListOf<String>()
+        if (node?.id != null) {
+            list.add("${node.word}:${node.id}")
+        }
+
+        if (!node?.childNodes.isNullOrEmpty()) {
+            node?.childNodes?.forEach {
+                list += traverse(it.value)
             }
         }
-        throw IllegalStateException("Should not get here")
+
+        return list
     }
 }
-
-data class Node<T>(
-    val value: T?,
-    var isLeaf: Boolean,
-    val children: MutableMap<T, Node<T>> = mutableMapOf()
-)

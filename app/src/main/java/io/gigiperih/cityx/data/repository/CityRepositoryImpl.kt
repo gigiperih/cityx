@@ -32,5 +32,5 @@ class CityRepositoryImpl(private val localResourceService: LocalResourceService)
         return map
     }
 
-    override fun getTrie() = Trie<Char>()
+    override fun getTrie() = Trie()
 }

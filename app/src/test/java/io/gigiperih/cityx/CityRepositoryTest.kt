@@ -11,7 +11,6 @@ import io.mockk.unmockkAll
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import java.util.*
 
 class CityRepositoryTest : BaseCityTest() {
     private lateinit var objectUnderTest: CityRepository
@@ -95,13 +94,17 @@ class CityRepositoryTest : BaseCityTest() {
     @Test
     fun `trivial test for trie`() {
         val trie = objectUnderTest.getTrie()
-        trie.add("gilang".toList())
-        trie.add("gigi".toList())
-        trie.add("ablahu".toList())
-        trie.add("abku".toList())
+        trie.insert("gilang", 10)
+        trie.insert("gigi", 1)
 
-        val result = trie.search("gi".toList())
+        trie.insert("abigail", 45)
+        trie.insert("abku", 420)
+        trie.insert("abkun", 21)
+        trie.insert("ablahu", 66)
+        trie.insert("abor", 2)
 
-        assertThat(result).isEqualTo("")
+        assertThat(trie.startsWith("ab")).isTrue()
+        //assertThat(trie.startsNode("abku")).isEqualTo("")
+        assertThat(trie.traverse(trie.startsNode("abk"))).isEqualTo("")
     }
 }

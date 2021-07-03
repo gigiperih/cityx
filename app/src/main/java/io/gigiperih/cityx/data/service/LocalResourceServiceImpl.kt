@@ -5,7 +5,6 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.gigiperih.cityx.data.City
-import io.gigiperih.cityx.data.mapper.sortAlphabetically
 
 class LocalResourceServiceImpl : LocalResourceService {
     override fun get(file: String): List<City>? {
@@ -16,7 +15,7 @@ class LocalResourceServiceImpl : LocalResourceService {
 
             // return sorted
             this::class.java.classLoader?.getResource(file)?.readText()
-                ?.let { adapter.fromJson(it) }.sortAlphabetically()
+                ?.let { adapter.fromJson(it) }
         } catch (e: JsonDataException) {
             null
         }

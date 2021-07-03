@@ -13,7 +13,9 @@ class CityInteractorImpl(private val repository: CityRepository) : CityInteracto
                 .getTrie()
                 .filterPrefix(keywords)
                 .traverse()
-                .chunked(10)[page - 1]
+                .apply {
+                    if (this.isNotEmpty()) chunked(10)[page - 1]
+                }
         }
     }
 }

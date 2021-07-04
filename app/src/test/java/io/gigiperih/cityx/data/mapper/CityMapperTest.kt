@@ -3,7 +3,9 @@ package io.gigiperih.cityx.data.mapper
 import com.google.common.truth.Truth.assertThat
 import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.data.Coordinate
+import io.gigiperih.cityx.data.structure.Trie
 import io.gigiperih.cityx.utils.TestUtils
+import io.gigiperih.cityx.utils.TestUtils.buildTrie
 import org.junit.Test
 
 class CityMapperTest {
@@ -26,10 +28,10 @@ class CityMapperTest {
         )
 
         // assert last item
-        assertThat(result?.get(1999)).isEqualTo(
+        assertThat(result?.get(19999)).isEqualTo(
             City(
-                country = "CZ", name = "Boskovice", _id = 3078910,
-                coord = Coordinate(lat = 49.487511, lon = 16.659969)
+                country = "KR", name = "괴내", _id = 6802827,
+                coord = Coordinate(lat = 37.507198, lon = 127.320099)
             )
         )
     }
@@ -43,7 +45,42 @@ class CityMapperTest {
     }
 
     @Test
-    fun `given null list of city, when mapped toHashMap, should return null`() {
-        TODO("Not yet implemented")
+    fun `given valid trie, when traversing is success, returns valid sorted list of cities`() {
+        val validTrie = TestUtils.buildSortedListOfCities("cities_20k.json").buildTrie()
+
+        val result = validTrie.filterPrefix("De").traverse()
+
+        assertThat(result).hasSize(168)
+        assertThat(result[0]).isEqualTo(
+            City(
+                country = "NL", name = "De Heeze", _id = 6621532,
+                coord = Coordinate(lat = 52.200611, lon = 5.95365)
+            )
+        )
+        assertThat(result[167]).isEqualTo(
+            City(
+                country = "RU", name = "Deyskoye", _id = 566267,
+                coord = Coordinate(lat = 43.47546, lon = 44.161819)
+            )
+        )
+    }
+
+    @Test
+    fun `given valid trie, when traversing is failing, returns empty list`() {
+        val validTrie = TestUtils.buildSortedListOfCities("cities_20k.json").buildTrie()
+
+        val result = validTrie.filterPrefix("Xoxo").traverse()
+
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun `given empty trie, when traversing is failing, returns empty list`() {
+        val emptyTrie = Trie()
+
+        // if trie is valid, this query will returns result
+        val result = emptyTrie.filterPrefix("De").traverse()
+
+        assertThat(result).isEmpty()
     }
 }

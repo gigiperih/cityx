@@ -5,7 +5,7 @@ import io.gigiperih.cityx.data.mapper.traverse
 import io.gigiperih.cityx.domain.repository.CityRepository
 
 class CityInteractorImpl(private val repository: CityRepository) : CityInteractor {
-    override fun search(keywords: String?, page: Int): List<City>? {
+    override suspend fun search(keywords: String?, page: Int): List<City>? {
         return if (keywords.isNullOrEmpty()) {
             repository.getList()?.chunked(10)?.get(page - 1)
         } else {

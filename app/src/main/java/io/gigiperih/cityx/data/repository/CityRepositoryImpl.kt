@@ -11,11 +11,11 @@ import io.gigiperih.cityx.domain.repository.CityRepository
 class CityRepositoryImpl(
     private val localResourceService: LocalResourceService
 ) : CityRepository {
-    override fun getList(): List<City>? {
+    override suspend fun getList(): List<City>? {
         return localResourceService.getList()
     }
 
-    override fun getTrie(): Trie {
+    override suspend fun getTrie(): Trie {
         return localResourceService.getTrie()
     }
 }

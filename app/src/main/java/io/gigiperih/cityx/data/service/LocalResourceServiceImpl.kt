@@ -43,11 +43,11 @@ class LocalResourceServiceImpl : LocalResourceService {
         }
     }
 
-    override fun getList(): List<City>? {
+    override suspend fun getList(): List<City>? {
         return cities
     }
 
-    override fun getTrie(): Trie {
+    override suspend fun getTrie(): Trie {
         return trie
     }
 }

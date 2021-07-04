@@ -4,7 +4,7 @@ import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.data.structure.Trie
 
 interface CityRepository {
-    fun getList(): List<City>?
+    suspend fun getList(): List<City>?
 
-    fun getTrie(): Trie
+    suspend fun getTrie(): Trie
 }

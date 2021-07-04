@@ -25,13 +25,14 @@ class CitiesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.resultState.observe(this, { resultState ->
+        viewModel.resultState.observe(requireActivity(), { resultState ->
             when (resultState) {
                 is ResultState.OnLoading -> {
                     text_view.text = "Loading"
                 }
                 is ResultState.OnSuccess -> {
-                    text_view.text = "Success: ${resultState.message} "
+                    text_view.text =
+                        "Success: ${resultState.message} data: ${resultState.data?.size} "
                 }
                 is ResultState.OnError -> {
                     text_view.text = "Error: ${resultState.message}"

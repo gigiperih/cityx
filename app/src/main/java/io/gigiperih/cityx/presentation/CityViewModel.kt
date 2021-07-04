@@ -8,6 +8,8 @@ import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.domain.interactor.CityInteractor
 import io.gigiperih.cityx.domain.mapper.ResultState
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -28,7 +30,7 @@ class CityViewModel(
 
     fun get() {
         viewModelScope.launch {
-            interactor.search("", 1).collect {
+            interactor.search("", 1).collectLatest {
                 Timber.d("kememmmmmms $it")
                 _resultState.postValue(it)
             }

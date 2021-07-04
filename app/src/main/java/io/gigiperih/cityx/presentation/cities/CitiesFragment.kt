@@ -1,4 +1,6 @@
 package io.gigiperih.cityx.presentation.cities
 
-class CitiesFragment {
+import androidx.fragment.app.Fragment
+
+class CitiesFragment : Fragment() {
 }

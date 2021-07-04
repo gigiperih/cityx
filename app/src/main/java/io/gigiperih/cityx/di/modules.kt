@@ -9,6 +9,7 @@ import io.gigiperih.cityx.domain.repository.CityRepository
 import io.gigiperih.cityx.presentation.CityViewModel
 import io.gigiperih.cityx.utils.dispatcher.DefaultDispatcherProvider
 import io.gigiperih.cityx.utils.dispatcher.DispatcherProvider
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -30,7 +31,7 @@ private val cityModule = module {
     }
 
     single<LocalResourceService> {
-        LocalResourceServiceImpl(get())
+        LocalResourceServiceImpl(androidContext(), get())
     }
 }
 

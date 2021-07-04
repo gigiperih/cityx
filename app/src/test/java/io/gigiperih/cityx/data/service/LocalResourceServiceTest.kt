@@ -1,8 +1,10 @@
 package io.gigiperih.cityx.data.service
 
+import android.content.Context
 import com.google.common.truth.Truth.assertThat
 import io.gigiperih.cityx.data.structure.Trie
 import io.gigiperih.cityx.utils.CoroutineTestRule
+import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
@@ -18,7 +20,8 @@ class LocalResourceServiceTest {
 
     @Before
     fun setUp() {
-        objectUnderTest = LocalResourceServiceImpl(coroutinesTestRule.testDispatcherProvider)
+        objectUnderTest =
+            LocalResourceServiceTestImpl(coroutinesTestRule.testDispatcherProvider)
     }
 
     @Test

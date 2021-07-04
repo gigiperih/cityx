@@ -38,8 +38,7 @@ class CityViewModelTest {
     @Before
     fun setUp() {
         objectUnderTest = CityViewModel(
-            mockedInteractor,
-            coroutinesTestRule.testDispatcherProvider
+            mockedInteractor
         )
 
     }

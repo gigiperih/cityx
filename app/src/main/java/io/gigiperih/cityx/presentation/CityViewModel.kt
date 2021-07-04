@@ -7,8 +7,9 @@ import androidx.lifecycle.viewModelScope
 import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.domain.interactor.CityInteractor
 import io.gigiperih.cityx.domain.mapper.ResultState
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 /**
  * Will be shared through activity lifecycle
@@ -20,13 +21,17 @@ class CityViewModel(
     private val _resultState = MutableLiveData<ResultState<List<City>>>(ResultState.OnLoading())
     val resultState: LiveData<ResultState<List<City>>> = _resultState
 
-    fun get() {
+    init {
         _resultState.postValue(ResultState.OnError("Eewww"))
 
-//        viewModelScope.launch {
-//            interactor.search("", 1).onEach {
-//                _resultState.postValue(it)
-//            }
-//        }
+    }
+
+    fun get() {
+        viewModelScope.launch {
+            interactor.search("", 1).collect {
+                Timber.d("kememmmmmms $it")
+                _resultState.postValue(it)
+            }
+        }
     }
 }

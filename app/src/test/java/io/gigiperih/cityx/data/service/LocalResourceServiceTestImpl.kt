@@ -1,11 +1,9 @@
 package io.gigiperih.cityx.data.service
 
-import android.content.Context
 import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import io.gigiperih.cityx.R
 import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.data.mapper.sortAlphabetically
 import io.gigiperih.cityx.data.structure.Trie
@@ -13,8 +11,10 @@ import io.gigiperih.cityx.utils.dispatcher.DefaultDispatcherProvider
 import io.gigiperih.cityx.utils.dispatcher.DispatcherProvider
 import kotlinx.coroutines.withContext
 
-class LocalResourceServiceImpl(
-    private val context: Context,
+/**
+ * imitate real parser so we don't have to mock context ;)
+ */
+class LocalResourceServiceTestImpl(
     private val dispatchers: DispatcherProvider = DefaultDispatcherProvider()
 ) : LocalResourceService {
     private val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
@@ -34,7 +34,7 @@ class LocalResourceServiceImpl(
 
     private fun parseList() {
         cities = try {
-            context.resources.openRawResource(R.raw.cities).bufferedReader().readText()
+            this::class.java.classLoader?.getResource("cities_100k.json")?.readText()
                 ?.let { adapter.fromJson(it) }.sortAlphabetically()
         } catch (e: JsonDataException) {
             null

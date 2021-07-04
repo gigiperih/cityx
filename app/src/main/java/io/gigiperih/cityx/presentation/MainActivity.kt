@@ -28,9 +28,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-
-        Handler().postDelayed({
-            viewModel.get()
-        }, 500)
+        viewModel.get()
     }
 }

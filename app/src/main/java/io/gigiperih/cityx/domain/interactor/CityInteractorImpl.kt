@@ -19,7 +19,7 @@ class CityInteractorImpl(
             // init as loading state
             emit(ResultState.OnLoading())
 
-            // invoking query
+            // perform query
             val result = if (keywords.isNullOrEmpty()) {
                 repository.getList()
             } else {
@@ -33,11 +33,11 @@ class CityInteractorImpl(
             if (!result.isNullOrEmpty()) {
                 emit(
                     ResultState.OnSuccess(
-                        result.chunked(10)[page - 1], "information"
+                        result.chunked(10)[page - 1], "Some useful information"
                     )
                 )
             } else {
-                emit(ResultState.OnError("Something went wrong"))
+                emit(ResultState.OnError("Result not found"))
             }
         }.flowOn(dispatchers.default())
     }

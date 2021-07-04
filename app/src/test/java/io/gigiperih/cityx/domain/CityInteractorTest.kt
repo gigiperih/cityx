@@ -14,11 +14,13 @@ import io.gigiperih.cityx.utils.TestUtils.buildTrie
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -37,13 +39,18 @@ class CityInteractorTest {
         objectUnderTest = CityInteractorImpl(mockedRepo, coroutinesTestRule.testDispatcherProvider)
     }
 
+    @After
+    fun tearDown() {
+        unmockkAll()
+    }
+
     @Test
     fun `verify objectUnderTest is not null`() {
         assertThat(objectUnderTest).isNotNull()
     }
 
     @Test
-    fun `given search param is empty, when search is success, returns correct result`() =
+    fun `given search param is empty, when search is success, returns correct flows`() =
         coroutinesTestRule.testDispatcher.runBlockingTest {
             coEvery { mockedRepo.getList() } returns FakeData.sortedSample
 
@@ -62,18 +69,29 @@ class CityInteractorTest {
                 isEqualTo(FakeData.sortedSample)
             }
 
+            assertThat(result.message).apply {
+                isNotEmpty()
+                isEqualTo("Some useful information")
+            }
+
             coVerify { mockedRepo.getList() }
         }
 
     @Test
-    fun `given search param is not empty, when result is found, returns correct list of cities`() =
-        runBlockingTest {
+    fun `given search param is not empty, when result is found, returns correct flows`() =
+        coroutinesTestRule.testDispatcher.runBlockingTest {
             coEvery { mockedRepo.getTrie() } returns FakeData.sortedTrie
 
-            val result = objectUnderTest.search(keywords = "No", page = 1)
+            val flow = objectUnderTest.search(keywords = "No", page = 1)
 
-            assertThat(result).apply {
-                //hasSize(1)
+            assertThat(flow.count()).isEqualTo(2)
+            assertThat(flow.first() is ResultState.OnLoading).isTrue()
+            assertThat(flow.last() is ResultState.OnSuccess).isTrue()
+
+            val result = flow.last() as ResultState.OnSuccess
+
+            assertThat(result.data).apply {
+                hasSize(1)
                 isEqualTo(
                     listOf(
                         City(
@@ -90,36 +108,40 @@ class CityInteractorTest {
         }
 
     @Test
-    fun `given search param is not empty, when result is not found, returns empty list`() =
-        runBlockingTest {
+    fun `given search param is not empty, when result is not found, returns Result not found`() =
+        coroutinesTestRule.testDispatcher.runBlockingTest {
             coEvery { mockedRepo.getTrie() } returns FakeData.sortedTrie
 
-            val result = objectUnderTest.search(keywords = "69", page = 1)
+            val flow = objectUnderTest.search(keywords = "Xoxo", page = 1)
+            assertThat(flow.count()).isEqualTo(2)
+            assertThat(flow.first() is ResultState.OnLoading).isTrue()
+            assertThat(flow.last() is ResultState.OnError).isTrue()
 
-//            assertThat(result).apply {
-//                isEmpty()
-//            }
+            val result = flow.last() as ResultState.OnError
+            assertThat(result.message).isEqualTo("Result not found")
 
             coVerify { mockedRepo.getTrie() }
         }
 
     @Test
     fun `given multi page of results, when page selected, returns correct chunked list of cities`() =
-        runBlockingTest {
+        coroutinesTestRule.testDispatcher.runBlockingTest {
             coEvery { mockedRepo.getList() } returns buildSortedListOfCities("cities_99.json")
 
-            val firstPage = objectUnderTest.search(keywords = "", page = 1)
-            val lastPage = objectUnderTest.search(keywords = "", page = 10)
+            val firstPage =
+                objectUnderTest.search(keywords = "", page = 1).last() as ResultState.OnSuccess
+            val lastPage =
+                objectUnderTest.search(keywords = "", page = 10).last() as ResultState.OnSuccess
 
-//            assertThat(firstPage).apply {
-//                isNotEmpty()
-//                hasSize(10)
-//            }
-//
-//            assertThat(lastPage).apply {
-//                isNotEmpty()
-//                hasSize(9)
-//            }
+            assertThat(firstPage.data).apply {
+                isNotEmpty()
+                hasSize(10)
+            }
+
+            assertThat(lastPage.data).apply {
+                isNotEmpty()
+                hasSize(9)
+            }
 
             coVerify { mockedRepo.getList() }
             coVerify(exactly = 0) { mockedRepo.getTrie() }
@@ -127,15 +149,16 @@ class CityInteractorTest {
 
     @Test
     fun `given large data, when search without param is success, returns default list without process`() =
-        runBlockingTest {
+        coroutinesTestRule.testDispatcher.runBlockingTest {
             coEvery { mockedRepo.getList() } returns buildSortedListOfCities("cities_100k.json")
 
-            val result = objectUnderTest.search(keywords = "", page = 1)
+            val result =
+                objectUnderTest.search(keywords = "", page = 1).last() as ResultState.OnSuccess
 
-//            assertThat(result).apply {
-//                isNotEmpty()
-//                hasSize(10)
-//            }
+            assertThat(result.data).apply {
+                isNotEmpty()
+                hasSize(10)
+            }
 
             coVerify { mockedRepo.getList() }
             coVerify(exactly = 0) { mockedRepo.getTrie() }
@@ -143,44 +166,47 @@ class CityInteractorTest {
 
     @Test
     fun `given large data, when search with param is success, return list of results`() =
-        runBlockingTest {
+        coroutinesTestRule.testDispatcher.runBlockingTest {
             coEvery { mockedRepo.getTrie() } returns
                     buildSortedListOfCities("cities_100k.json").buildTrie()
 
-            val result = objectUnderTest.search(keywords = "Ab", page = 1)
+            val result =
+                objectUnderTest.search(keywords = "Ab", page = 1).last() as ResultState.OnSuccess
 
-//            assertThat(result).apply {
-//                isNotEmpty()
-//                hasSize(183)
-//            }
-//            assertThat(result?.get(0)).isEqualTo(
-//                City(
-//                    country = "AF", name = "Ab-e Kamari", _id = 1149550,
-//                    coord = Coordinate(lat = 35.087959, lon = 63.067799)
-//                )
-//            )
+            assertThat(result.data).apply {
+                isNotEmpty()
+                hasSize(10)
+            }
+            assertThat(result.data?.get(0)).isEqualTo(
+                City(
+                    country = "AF", name = "Ab-e Kamari", _id = 1149550,
+                    coord = Coordinate(lat = 35.087959, lon = 63.067799)
+                )
+            )
 
             coVerify { mockedRepo.getTrie() }
         }
 
     @Test
     fun `given large data, when search with param is failing, return empty list`() =
-        runBlockingTest {
+        coroutinesTestRule.testDispatcher.runBlockingTest {
             coEvery { mockedRepo.getTrie() } returns
                     buildSortedListOfCities("cities_100k.json").buildTrie()
 
-            val result = objectUnderTest.search(keywords = "xoxo", page = 1)
+            val flow = objectUnderTest.search(keywords = "Xoxoxoxoxo", page = 1)
+            assertThat(flow.count()).isEqualTo(2)
+            assertThat(flow.first() is ResultState.OnLoading).isTrue()
+            assertThat(flow.last() is ResultState.OnError).isTrue()
 
-//            assertThat(result).apply {
-//                isEmpty()
-//            }
+            val result = flow.last() as ResultState.OnError
+            assertThat(result.message).isEqualTo("Result not found")
 
             coVerify { mockedRepo.getTrie() }
         }
 
     @Test
     fun `given small and large data, verify searching time complexity is better than linear`() =
-        runBlockingTest {
+        coroutinesTestRule.testDispatcher.runBlockingTest {
             val smallDataRepo = mockk<CityRepository>()
             val largeDataRepo = mockk<CityRepository>()
 
@@ -204,17 +230,22 @@ class CityInteractorTest {
             // by checking execution time
             // should be better than linear
             assertThat(largeTimeExec).apply {
-                isGreaterThan(smallTimeExec)
-
                 // for linear time complexity
                 // if 2 data = ~2ns
                 // then 100k data should be around ~50000 ns
                 isLessThan(smallTimeExec * 50000)
             }
 
-//            assertThat(smallDataInteractor.search(keywords = "No", page = 1))
-//                .hasSize(1)
-//            assertThat(largeDataInteractor.search(keywords = "No", page = 1))
-//                .hasSize(889)
+            val smallResult = smallDataInteractor.search(keywords = "No", page = 1)
+                .last() as ResultState.OnSuccess
+
+            // results > 10 items resulting in multi-page response
+            val largeResult = largeDataInteractor.search(keywords = "No", page = 1)
+                .last() as ResultState.OnSuccess
+
+            assertThat(smallResult.data)
+                .hasSize(1)
+            assertThat(largeResult.data)
+                .hasSize(10)
         }
 }

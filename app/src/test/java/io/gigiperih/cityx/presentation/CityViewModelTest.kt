@@ -6,6 +6,7 @@ import io.gigiperih.cityx.utils.CoroutineTestRule
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -38,7 +39,7 @@ class CityViewModelTest {
     }
 
     @Test
-    fun `trivial test`() {
-        TODO("Not yet implemented")
+    fun `trivial test`() = coroutinesTestRule.testDispatcher.runBlockingTest {
+        val observer = objectUnderTest.resultLiveData.testObserver
     }
 }

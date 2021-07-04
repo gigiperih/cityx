@@ -1,4 +1,4 @@
-package io.gigiperih.cityx
+package io.gigiperih.cityx.presentation
 
 import org.junit.Test
 

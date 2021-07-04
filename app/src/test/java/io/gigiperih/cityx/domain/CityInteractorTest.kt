@@ -1,18 +1,14 @@
 package io.gigiperih.cityx.domain
 
 import com.google.common.truth.Truth.assertThat
-import com.squareup.moshi.JsonDataException
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.data.Coordinate
-import io.gigiperih.cityx.data.mapper.sortAlphabetically
-import io.gigiperih.cityx.data.structure.Trie
 import io.gigiperih.cityx.domain.interactor.CityInteractor
 import io.gigiperih.cityx.domain.interactor.CityInteractorImpl
 import io.gigiperih.cityx.domain.repository.CityRepository
 import io.gigiperih.cityx.fake.FakeData
+import io.gigiperih.cityx.utils.TestUtils.buildListOfCities
+import io.gigiperih.cityx.utils.TestUtils.buildTrie
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -190,34 +186,5 @@ class CityInteractorTest {
             .hasSize(1)
         assertThat(largeDataInteractor.search(keywords = "No", page = 1))
             .hasSize(889)
-    }
-
-    /**
-     * helper to build list from json file
-     */
-    private fun buildListOfCities(file: String): List<City>? {
-        val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
-        val listType = Types.newParameterizedType(List::class.java, City::class.java)
-        val adapter = moshi.adapter<List<City>>(listType)
-
-        return try {
-            this::class.java.classLoader?.getResource(file)
-                ?.readText()
-                ?.let { adapter.fromJson(it) }.sortAlphabetically()
-        } catch (e: JsonDataException) {
-            null
-        }
-    }
-
-    /**
-     * helper to build trie from list of cities
-     */
-    fun List<City>?.buildTrie(): Trie {
-        val trie = Trie()
-        this?.forEach {
-            trie.insert("${it.name} ${it.country}", it)
-        }
-
-        return trie
     }
 }

@@ -1,4 +1,4 @@
-package io.gigiperih.cityx
+package io.gigiperih.cityx.data.mapper
 
 import org.junit.Test
 

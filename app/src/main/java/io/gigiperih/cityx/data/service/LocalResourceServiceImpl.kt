@@ -7,10 +7,13 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.data.mapper.sortAlphabetically
 import io.gigiperih.cityx.data.structure.Trie
-import kotlinx.coroutines.Dispatchers
+import io.gigiperih.cityx.utils.dispatcher.DefaultDispatcherProvider
+import io.gigiperih.cityx.utils.dispatcher.DispatcherProvider
 import kotlinx.coroutines.withContext
 
-class LocalResourceServiceImpl : LocalResourceService {
+class LocalResourceServiceImpl(
+    private val dispatchers: DispatcherProvider = DefaultDispatcherProvider()
+) : LocalResourceService {
     companion object {
         const val DEFAULT_FILE = "cities_100k.json"
     }
@@ -46,13 +49,13 @@ class LocalResourceServiceImpl : LocalResourceService {
     }
 
     override suspend fun getList(): List<City>? {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatchers.io()) {
             return@withContext cities
         }
     }
 
     override suspend fun getTrie(): Trie {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatchers.io()) {
             return@withContext trie
         }
     }

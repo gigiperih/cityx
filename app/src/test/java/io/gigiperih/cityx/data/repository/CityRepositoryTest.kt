@@ -49,7 +49,7 @@ class CityRepositoryTest {
             val result = objectUnderTest.getList()
 
             assertThat(result).apply {
-                isEqualTo("check failing")
+                isEqualTo(FakeData.sortedSample)
                 hasSize(2)
             }
 

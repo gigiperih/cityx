@@ -127,17 +127,34 @@ class CityInteractorTest {
 
         assertThat(result).apply {
             isNotEmpty()
-            hasSize(10)
+            hasSize(183)
         }
+        assertThat(result?.get(0)).isEqualTo(
+            City(
+                country = "AF", name = "Ab-e Kamari", _id = 1149550,
+                coord = Coordinate(lat = 35.087959, lon = 63.067799)
+            )
+        )
 
         verify { mockedRepo.getTrie() }
     }
 
     @Test
     fun `given large data, when search with param is failing, return empty list`() {
-        TODO("Not yet implemented")
+        every { mockedRepo.getTrie() } returns buildListOfCities("cities_100k.json").buildTrie()
+
+        val result = objectUnderTest.search(keywords = "xoxo", page = 1)
+
+        assertThat(result).apply {
+            isEmpty()
+        }
+
+        verify { mockedRepo.getTrie() }
     }
 
+    /**
+     * helper to build list from json file
+     */
     private fun buildListOfCities(file: String): List<City>? {
         val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
         val listType = Types.newParameterizedType(List::class.java, City::class.java)
@@ -152,6 +169,9 @@ class CityInteractorTest {
         }
     }
 
+    /**
+     * helper to build trie from list of cities
+     */
     fun List<City>?.buildTrie(): Trie {
         val trie = Trie()
         this?.forEach {

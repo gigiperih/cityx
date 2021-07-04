@@ -21,14 +21,23 @@ class LocalResourceServiceImpl : LocalResourceService {
 
     init {
         // parse list
+        parseList()
+
+        // build trie
+        buildTrie()
+
+    }
+
+    private fun parseList() {
         cities = try {
             this::class.java.classLoader?.getResource(DEFAULT_FILE)?.readText()
                 ?.let { adapter.fromJson(it) }.sortAlphabetically()
         } catch (e: JsonDataException) {
             null
         }
+    }
 
-        // build trie
+    private fun buildTrie() {
         cities?.forEach {
             trie.insert("${it.name} ${it.country}", it)
         }

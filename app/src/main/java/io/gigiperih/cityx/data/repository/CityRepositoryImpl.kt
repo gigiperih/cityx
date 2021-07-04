@@ -1,24 +1,21 @@
 package io.gigiperih.cityx.data.repository
 
-import com.squareup.moshi.JsonDataException
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.gigiperih.cityx.data.City
-import io.gigiperih.cityx.data.source.ResourceService
+import io.gigiperih.cityx.data.service.LocalResourceService
+import io.gigiperih.cityx.data.structure.Trie
 import io.gigiperih.cityx.domain.repository.CityRepository
 
-class CityRepositoryImpl(private val resourceService: ResourceService) : CityRepository {
-    override fun get(fileName: String): List<City>? {
-        return try {
-            val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
-            val listType = Types.newParameterizedType(List::class.java, City::class.java)
+/**
+ * this layer will be very helpful if we have multiple data sources
+ */
+class CityRepositoryImpl(
+    private val localResourceService: LocalResourceService
+) : CityRepository {
+    override fun getList(): List<City>? {
+        return localResourceService.getList()
+    }
 
-            val adapter = moshi.adapter<List<City>>(listType)
-
-            resourceService.get(fileName = fileName)?.let { adapter.fromJson(it) }
-        } catch (e: JsonDataException) {
-            null
-        }
+    override fun getTrie(): Trie {
+        return localResourceService.getTrie()
     }
 }

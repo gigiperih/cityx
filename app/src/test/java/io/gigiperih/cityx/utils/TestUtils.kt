@@ -7,6 +7,10 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.data.mapper.sortAlphabetically
 import io.gigiperih.cityx.data.structure.Trie
+import io.gigiperih.cityx.domain.mapper.ResultState
+import io.gigiperih.cityx.fake.FakeData
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 /**
  * utils for preparing data to be tested
@@ -54,5 +58,29 @@ object TestUtils {
         }
 
         return trie
+    }
+
+    fun flowWithResult(): Flow<ResultState<List<City>>> {
+        return flow<ResultState<List<City>>> {
+            // init as loading state
+            emit(ResultState.OnLoading())
+
+            emit(
+                ResultState.OnSuccess(
+                    FakeData.sortedSample, "Some useful information"
+                )
+            )
+        }
+    }
+
+    fun flowWithError(): Flow<ResultState<List<City>>> {
+        return flow<ResultState<List<City>>> {
+            // init as loading state
+            emit(ResultState.OnLoading())
+
+            emit(
+                ResultState.OnError("Result not found")
+            )
+        }
     }
 }

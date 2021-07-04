@@ -39,6 +39,6 @@ class CityInteractorImpl(
             } else {
                 emit(ResultState.OnError("Result not found"))
             }
-        }.flowOn(dispatchers.default())
+        }.flowOn(dispatchers.main())
     }
 }

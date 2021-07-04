@@ -7,7 +7,7 @@ import io.gigiperih.cityx.domain.interactor.CityInteractor
 import io.gigiperih.cityx.domain.interactor.CityInteractorImpl
 import io.gigiperih.cityx.domain.repository.CityRepository
 import io.gigiperih.cityx.fake.FakeData
-import io.gigiperih.cityx.utils.TestUtils.buildListOfCities
+import io.gigiperih.cityx.utils.TestUtils.buildSortedListOfCities
 import io.gigiperih.cityx.utils.TestUtils.buildTrie
 import io.mockk.every
 import io.mockk.mockk
@@ -82,7 +82,7 @@ class CityInteractorTest {
 
     @Test
     fun `given multi page of results, when page selected, returns correct chunked list of cities`() {
-        every { mockedRepo.getList() } returns buildListOfCities("cities_99.json")
+        every { mockedRepo.getList() } returns buildSortedListOfCities("cities_99.json")
 
         val firstPage = objectUnderTest.search(keywords = "", page = 1)
         val lastPage = objectUnderTest.search(keywords = "", page = 10)
@@ -103,7 +103,7 @@ class CityInteractorTest {
 
     @Test
     fun `given large data, when search without param is success, returns default list without process`() {
-        every { mockedRepo.getList() } returns buildListOfCities("cities_100k.json")
+        every { mockedRepo.getList() } returns buildSortedListOfCities("cities_100k.json")
 
         val result = objectUnderTest.search(keywords = "", page = 1)
 
@@ -118,7 +118,7 @@ class CityInteractorTest {
 
     @Test
     fun `given large data, when search with param is success, return list of results`() {
-        every { mockedRepo.getTrie() } returns buildListOfCities("cities_100k.json").buildTrie()
+        every { mockedRepo.getTrie() } returns buildSortedListOfCities("cities_100k.json").buildTrie()
 
         val result = objectUnderTest.search(keywords = "Ab", page = 1)
 
@@ -138,7 +138,7 @@ class CityInteractorTest {
 
     @Test
     fun `given large data, when search with param is failing, return empty list`() {
-        every { mockedRepo.getTrie() } returns buildListOfCities("cities_100k.json").buildTrie()
+        every { mockedRepo.getTrie() } returns buildSortedListOfCities("cities_100k.json").buildTrie()
 
         val result = objectUnderTest.search(keywords = "xoxo", page = 1)
 
@@ -158,9 +158,9 @@ class CityInteractorTest {
         val largeDataInteractor = CityInteractorImpl(largeDataRepo)
 
         every { smallDataRepo.getTrie() } returns
-                buildListOfCities("cities_2.json").buildTrie()
+                buildSortedListOfCities("cities_2.json").buildTrie()
         every { largeDataRepo.getTrie() } returns
-                buildListOfCities("cities_100k.json").buildTrie()
+                buildSortedListOfCities("cities_100k.json").buildTrie()
 
         val smallTimeExec = measureNanoTime {
             smallDataInteractor.search(keywords = "No", page = 1)

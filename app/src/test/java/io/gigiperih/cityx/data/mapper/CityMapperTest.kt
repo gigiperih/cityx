@@ -5,12 +5,12 @@ import org.junit.Test
 class CityMapperTest {
 
     @Test
-    fun `given sorted small list of city, when mapped toHashMap, should return correct hashMap`() {
-        TODO("Not yet implemented")
+    fun `given medium unsorted list of cities, when sorting is success, returns sorted list`() {
+        val unsortedList = ""
     }
 
     @Test
-    fun `given medium list of city, when mapped toHashMap, should return correct hashMap`() {
+    fun `given list is null, when sorting is failing, returns null`() {
         TODO("Not yet implemented")
     }
 

@@ -16,7 +16,21 @@ object TestUtils {
     /**
      * helper to build list from json file
      */
-    fun buildListOfCities(file: String): List<City>? {
+    fun buildSortedListOfCities(file: String): List<City>? {
+        val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+        val listType = Types.newParameterizedType(List::class.java, City::class.java)
+        val adapter = moshi.adapter<List<City>>(listType)
+
+        return try {
+            this::class.java.classLoader?.getResource(file)
+                ?.readText()
+                ?.let { adapter.fromJson(it) }.sortAlphabetically()
+        } catch (e: JsonDataException) {
+            null
+        }
+    }
+
+    fun buildUnsortedListOfCities(file: String): List<City>? {
         val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
         val listType = Types.newParameterizedType(List::class.java, City::class.java)
         val adapter = moshi.adapter<List<City>>(listType)

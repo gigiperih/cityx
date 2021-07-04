@@ -7,6 +7,8 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.data.mapper.sortAlphabetically
 import io.gigiperih.cityx.data.structure.Trie
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * it's kinda hard to mock large data :)
@@ -14,7 +16,7 @@ import io.gigiperih.cityx.data.structure.Trie
  *
  * TODO: refactor for mocking after abstraction processes completed
  */
-class LocalResourceServiceTestImpl(file: String) : LocalResourceService {
+class LocalResourceServiceTestImpl(private val file: String) : LocalResourceService {
     private val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
     private val listType = Types.newParameterizedType(List::class.java, City::class.java)
     private val adapter = moshi.adapter<List<City>>(listType)
@@ -23,24 +25,37 @@ class LocalResourceServiceTestImpl(file: String) : LocalResourceService {
 
     init {
         // parse list
+        parseList()
+
+        // build trie
+        buildTrie()
+
+    }
+
+    private fun parseList() {
         cities = try {
             this::class.java.classLoader?.getResource(file)?.readText()
                 ?.let { adapter.fromJson(it) }.sortAlphabetically()
         } catch (e: JsonDataException) {
             null
         }
+    }
 
-        // build trie
+    private fun buildTrie() {
         cities?.forEach {
             trie.insert("${it.name} ${it.country}", it)
         }
     }
 
-    override fun getList(): List<City>? {
-        return cities
+    override suspend fun getList(): List<City>? {
+        return withContext(Dispatchers.IO) {
+            return@withContext cities
+        }
     }
 
-    override fun getTrie(): Trie {
-        return trie
+    override suspend fun getTrie(): Trie {
+        return withContext(Dispatchers.IO) {
+            return@withContext trie
+        }
     }
 }

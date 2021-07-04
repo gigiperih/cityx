@@ -7,6 +7,8 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.data.mapper.sortAlphabetically
 import io.gigiperih.cityx.data.structure.Trie
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class LocalResourceServiceImpl : LocalResourceService {
     companion object {
@@ -44,10 +46,14 @@ class LocalResourceServiceImpl : LocalResourceService {
     }
 
     override suspend fun getList(): List<City>? {
-        return cities
+        return withContext(Dispatchers.IO) {
+            return@withContext cities
+        }
     }
 
     override suspend fun getTrie(): Trie {
-        return trie
+        return withContext(Dispatchers.IO) {
+            return@withContext trie
+        }
     }
 }

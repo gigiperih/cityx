@@ -4,7 +4,7 @@ import org.junit.Test
 
 class CityViewModelTest {
     @Test
-    fun trivial() {
+    fun `trivial test`() {
         TODO("Not yet implemented")
     }
 }

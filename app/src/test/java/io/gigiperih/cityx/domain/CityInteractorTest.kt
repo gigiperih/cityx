@@ -36,7 +36,10 @@ class CityInteractorTest {
 
     @Before
     fun setUp() {
-        objectUnderTest = CityInteractorImpl(mockedRepo, coroutinesTestRule.testDispatcherProvider)
+        objectUnderTest = CityInteractorImpl(
+            mockedRepo,
+            coroutinesTestRule.testDispatcherProvider
+        )
     }
 
     @After
@@ -126,7 +129,8 @@ class CityInteractorTest {
     @Test
     fun `given multi page of results, when page selected, returns correct chunked list of cities`() =
         coroutinesTestRule.testDispatcher.runBlockingTest {
-            coEvery { mockedRepo.getList() } returns buildSortedListOfCities("cities_99.json")
+            coEvery { mockedRepo.getList() } returns
+                    buildSortedListOfCities("cities_99.json")
 
             val firstPage =
                 objectUnderTest.search(keywords = "", page = 1).last() as ResultState.OnSuccess
@@ -150,7 +154,8 @@ class CityInteractorTest {
     @Test
     fun `given large data, when search without param is success, returns default list without process`() =
         coroutinesTestRule.testDispatcher.runBlockingTest {
-            coEvery { mockedRepo.getList() } returns buildSortedListOfCities("cities_100k.json")
+            coEvery { mockedRepo.getList() } returns
+                    buildSortedListOfCities("cities_100k.json")
 
             val result =
                 objectUnderTest.search(keywords = "", page = 1).last() as ResultState.OnSuccess

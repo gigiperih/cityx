@@ -7,8 +7,6 @@ import androidx.lifecycle.viewModelScope
 import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.domain.interactor.CityInteractor
 import io.gigiperih.cityx.domain.mapper.ResultState
-import io.gigiperih.cityx.utils.dispatcher.DefaultDispatcherProvider
-import io.gigiperih.cityx.utils.dispatcher.DispatcherProvider
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
@@ -17,8 +15,7 @@ import kotlinx.coroutines.launch
  * for both (CitiesFragment and CityFragment)
  */
 class CityViewModel(
-    private val interactor: CityInteractor,
-    private val dispatchers: DispatcherProvider = DefaultDispatcherProvider()
+    val interactor: CityInteractor
 ) : ViewModel() {
     private val _resultState = MutableLiveData<ResultState<List<City>>>(ResultState.OnLoading())
     val resultState: LiveData<ResultState<List<City>>> = _resultState

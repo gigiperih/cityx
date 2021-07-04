@@ -29,21 +29,9 @@ class Trie {
         currentNode.city = city
     }
 
-    fun startsWith(word: String): Boolean {
-        var currentNode = root
-        for (char in word) {
-            if (currentNode.childNodes[char] == null) {
-                return false
-            }
-            currentNode = currentNode.childNodes[char]!!
-        }
-        return currentNode.city == null
-    }
-
     fun filterPrefix(word: String): Node? {
-        // TODO: handle empty keywords
         // do not waste time by traversing with empty keywords
-        // just return default list
+        // just return original sorted list
         var currentNode = root
         for (char in word) {
             if (currentNode.childNodes[char] == null) {
@@ -54,19 +42,4 @@ class Trie {
 
         return currentNode
     }
-
-//    fun traverse(node: Node?): List<String> {
-//        val list = mutableListOf<String>()
-//        if (node?.city != null) {
-//            list.add("${node.city?.name}:${node.city?.country}")
-//        }
-//
-//        if (!node?.childNodes.isNullOrEmpty()) {
-//            node?.childNodes?.forEach {
-//                list += traverse(it.value)
-//            }
-//        }
-//
-//        return list
-//    }
 }

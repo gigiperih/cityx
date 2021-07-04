@@ -18,6 +18,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
+import kotlin.system.measureNanoTime
 
 class CityInteractorTest {
     var mockedRepo = mockk<CityRepository>()
@@ -150,6 +151,45 @@ class CityInteractorTest {
         }
 
         verify { mockedRepo.getTrie() }
+    }
+
+    @Test
+    fun `given small and large data, verify searching time complexity is better than linear`() {
+        val smallDataRepo = mockk<CityRepository>()
+        val largeDataRepo = mockk<CityRepository>()
+
+        val smallDataInteractor = CityInteractorImpl(smallDataRepo)
+        val largeDataInteractor = CityInteractorImpl(largeDataRepo)
+
+        every { smallDataRepo.getTrie() } returns
+                buildListOfCities("cities_2.json").buildTrie()
+        every { largeDataRepo.getTrie() } returns
+                buildListOfCities("cities_100k.json").buildTrie()
+
+        val smallTimeExec = measureNanoTime {
+            smallDataInteractor.search(keywords = "No", page = 1)
+        }
+
+        val largeTimeExec = measureNanoTime {
+            largeDataInteractor.search(keywords = "No", page = 1)
+        }
+
+        // relative time complexity
+        // by checking execution time
+        // should be better than linear
+        assertThat(largeTimeExec).apply {
+            isGreaterThan(smallTimeExec)
+
+            // for linear time complexity
+            // if 2 data = ~2ns
+            // then 100k data should be around ~50000 ns
+            isLessThan(smallTimeExec * 50000)
+        }
+
+        assertThat(smallDataInteractor.search(keywords = "No", page = 1))
+            .hasSize(1)
+        assertThat(largeDataInteractor.search(keywords = "No", page = 1))
+            .hasSize(889)
     }
 
     /**

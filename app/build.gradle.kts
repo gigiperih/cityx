@@ -84,7 +84,10 @@ dependencies {
     testImplementation("com.google.truth:truth:1.1.3")
     testImplementation("io.mockk:mockk:1.10.6")
 
+    // https://craigrussell.io/2019/11/unit-testing-coroutine-suspend-functions-using-testcoroutinedispatcher/
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3")
+
     // instrumentation testing libraries
-    androidTestImplementation("androidx.test.ext:junit:1.1.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
 }

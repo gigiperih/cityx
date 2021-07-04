@@ -85,6 +85,7 @@ dependencies {
     testImplementation("com.google.truth:truth:1.1.3")
     testImplementation("io.mockk:mockk:1.10.6")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3")
+    testImplementation("com.jraska.livedata:testing-ktx:1.2.0")
 
     // instrumentation testing libraries
     androidTestImplementation("androidx.test.ext:junit:1.1.3")

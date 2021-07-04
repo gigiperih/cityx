@@ -59,28 +59,28 @@ object TestUtils {
 
         return trie
     }
+}
 
-    fun flowWithResult(): Flow<ResultState<List<City>>> {
-        return flow<ResultState<List<City>>> {
-            // init as loading state
-            emit(ResultState.OnLoading())
+fun flowWithResult(): Flow<ResultState<List<City>>> {
+    return flow<ResultState<List<City>>> {
+        // init as loading state
+        emit(ResultState.OnLoading())
 
-            emit(
-                ResultState.OnSuccess(
-                    FakeData.sortedSample, "Some useful information"
-                )
+        emit(
+            ResultState.OnSuccess(
+                FakeData.sortedSample, "Some useful information"
             )
-        }
+        )
     }
+}
 
-    fun flowWithError(): Flow<ResultState<List<City>>> {
-        return flow<ResultState<List<City>>> {
-            // init as loading state
-            emit(ResultState.OnLoading())
+fun flowWithError(): Flow<ResultState<List<City>>> {
+    return flow<ResultState<List<City>>> {
+        // init as loading state
+        emit(ResultState.OnLoading())
 
-            emit(
-                ResultState.OnError("Result not found")
-            )
-        }
+        emit(
+            ResultState.OnError("Result not found")
+        )
     }
 }

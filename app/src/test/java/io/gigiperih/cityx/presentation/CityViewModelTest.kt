@@ -1,20 +1,17 @@
 package io.gigiperih.cityx.presentation
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.Observer
 import com.google.common.truth.Truth.assertThat
+import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.domain.interactor.CityInteractor
 import io.gigiperih.cityx.domain.mapper.ResultState
 import io.gigiperih.cityx.utils.CoroutineTestRule
-import io.mockk.mockk
-import io.mockk.unmockkAll
-import kotlinx.coroutines.Dispatchers
+import io.gigiperih.cityx.utils.flowWithResult
+import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.ObsoleteCoroutinesApi
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.newSingleThreadContext
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runBlockingTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -27,30 +24,29 @@ import org.junit.runners.JUnit4
 @RunWith(JUnit4::class)
 class CityViewModelTest {
     private lateinit var objectUnderTest: CityViewModel
-    private var mockedInteractor = mockk<CityInteractor>(relaxed = true)
-    private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
-    @get:Rule
+    var mockedInteractor = mockk<CityInteractor>()
+
+    @Rule
+    @JvmField
     var coroutinesTestRule = CoroutineTestRule()
 
-    @get:Rule
+    @Rule
+    @JvmField
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Before
     fun setUp() {
-        Dispatchers.setMain(mainThreadSurrogate)
-
         objectUnderTest = CityViewModel(
-            mockedInteractor
+            mockedInteractor,
+            coroutinesTestRule.testDispatcherProvider
         )
+
     }
 
     @After
     fun tearDown() {
         unmockkAll()
-
-        Dispatchers.resetMain()
-        mainThreadSurrogate.close()
     }
 
     @Test
@@ -60,8 +56,21 @@ class CityViewModelTest {
 
     @Test
     fun `trivial test`() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        val result = objectUnderTest.resultState.first()
+        // TODO: fix unit test ASAP!
+        val testObserver = createTestObserver()
+        objectUnderTest.resultState.observeForever(testObserver)
 
-        assertThat(result is ResultState.OnLoading).isTrue()
+//        coEvery { mockedInteractor.search("", 1) } returns
+//                flowWithResult()
+
+        objectUnderTest.get()
+
+        val slot = slot<ResultState<List<City>>>()
+        verify { testObserver.onChanged(capture(slot)) }
+
+        //coVerify { mockedInteractor.search("", 1) }
     }
+
+    private fun createTestObserver(): Observer<ResultState<List<City>>> =
+        spyk(Observer { })
 }

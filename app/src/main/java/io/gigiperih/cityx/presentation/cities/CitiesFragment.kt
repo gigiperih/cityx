@@ -15,6 +15,7 @@ import io.gigiperih.cityx.utils.extensions.textChanges
 import io.gigiperih.cityx.utils.extensions.visible
 import kotlinx.android.synthetic.main.fragment_cities.*
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -48,7 +49,8 @@ class CitiesFragment : Fragment() {
         recycler_view_cities.adapter = citiesAdapter
 
         text_input_search.textChanges()
-            .debounce(300)
+            .filterNot { it.isNullOrEmpty() }
+            .debounce(1000)
             .onEach {
                 viewModel.search(it.toString())
             }
@@ -59,6 +61,7 @@ class CitiesFragment : Fragment() {
         viewModel.resultState.observe(requireActivity(), { resultState ->
             when (resultState) {
                 is ResultState.OnLoading -> {
+                    text_information.text = "Fetching..."
                     progress_circular.visible()
                 }
                 is ResultState.OnSuccess -> {
@@ -72,6 +75,8 @@ class CitiesFragment : Fragment() {
                 is ResultState.OnError -> {
                     progress_circular.gone()
                     text_information.text = resultState.message
+
+                    citiesAdapter?.clear()
                 }
             }
         })

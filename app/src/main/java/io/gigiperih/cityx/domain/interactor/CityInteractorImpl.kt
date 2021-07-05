@@ -6,6 +6,7 @@ import io.gigiperih.cityx.domain.mapper.ResultState
 import io.gigiperih.cityx.domain.repository.CityRepository
 import io.gigiperih.cityx.utils.dispatcher.DefaultDispatcherProvider
 import io.gigiperih.cityx.utils.dispatcher.DispatcherProvider
+import io.gigiperih.cityx.utils.extensions.getValue
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
@@ -18,13 +19,15 @@ class CityInteractorImpl(
             // init as loading state
             emit(ResultState.OnLoading())
 
-            // perform query
             val result = if (keywords.isNullOrEmpty()) {
-                repository.getList()
+                repository
+                    .getTrie()
+                    .showAll()
+                    .traverse()
             } else {
                 repository
                     .getTrie()
-                    .filterPrefix(keywords)
+                    .filterPrefix(keywords.getValue())
                     .traverse()
             }
 
@@ -38,5 +41,5 @@ class CityInteractorImpl(
             } else {
                 emit(ResultState.OnError("Result not found"))
             }
-        }.flowOn(dispatchers.main())
+        }.flowOn(dispatchers.io())
 }

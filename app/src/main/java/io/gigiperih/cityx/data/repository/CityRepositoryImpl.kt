@@ -1,6 +1,5 @@
 package io.gigiperih.cityx.data.repository
 
-import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.data.service.LocalResourceService
 import io.gigiperih.cityx.data.structure.Trie
 import io.gigiperih.cityx.domain.repository.CityRepository
@@ -15,15 +14,11 @@ class CityRepositoryImpl(
     private val localResourceService: LocalResourceService,
     private val dispatchers: DispatcherProvider = DefaultDispatcherProvider()
 ) : CityRepository {
-    override suspend fun getList(): List<City>? {
-        return withContext(dispatchers.default()) {
-            return@withContext localResourceService.getList()
-        }
-    }
-
     override suspend fun getTrie(): Trie {
-        return withContext(dispatchers.default()) {
-            return@withContext localResourceService.getTrie()
-        }
+//        return withContext(dispatchers.io()) {
+//            return@withContext localResourceService.getTrie()
+//        }
+
+        return localResourceService.getTrie()
     }
 }

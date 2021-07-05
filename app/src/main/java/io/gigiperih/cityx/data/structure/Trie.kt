@@ -29,6 +29,8 @@ class Trie {
         currentNode.city = city
     }
 
+    fun showAll(): Node = root
+
     fun filterPrefix(word: String): Node? {
         // do not waste time by traversing with empty keywords
         // just return original sorted list

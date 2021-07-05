@@ -48,14 +48,18 @@ class LocalResourceServiceImpl(
     }
 
     override suspend fun getList(): List<City>? {
-        return withContext(dispatchers.io()) {
-            return@withContext cities
-        }
+//        return withContext(dispatchers.io()) {
+//            return@withContext cities
+//        }
+
+        return cities
     }
 
     override suspend fun getTrie(): Trie {
-        return withContext(dispatchers.io()) {
-            return@withContext trie
-        }
+//        return withContext(dispatchers.io()) {
+//            return@withContext trie
+//        }
+
+        return trie
     }
 }

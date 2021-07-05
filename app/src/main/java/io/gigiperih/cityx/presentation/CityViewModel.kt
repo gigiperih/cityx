@@ -14,7 +14,7 @@ import timber.log.Timber
 class CityViewModel(
     val interactor: CityInteractor
 ) : ViewModel() {
-    private val _resultState = MutableLiveData<ResultState<List<City>>>(ResultState.OnLoading())
+    private val _resultState = MutableLiveData<ResultState<List<City>>>()
     val resultState: LiveData<ResultState<List<City>>> = _resultState
 
     init {
@@ -22,7 +22,6 @@ class CityViewModel(
     }
 
     fun search(keywords: String) {
-        _resultState.postValue(ResultState.OnLoading())
         viewModelScope.launch {
             interactor.search(keywords, 1).collectLatest {
                 Timber.d("kememmmmmms $it")

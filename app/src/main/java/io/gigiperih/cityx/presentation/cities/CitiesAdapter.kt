@@ -41,4 +41,9 @@ class CitiesAdapter :
         cities.addAll(newList)
         notifyDataSetChanged()
     }
+
+    fun clear() {
+        cities.clear()
+        notifyDataSetChanged()
+    }
 }

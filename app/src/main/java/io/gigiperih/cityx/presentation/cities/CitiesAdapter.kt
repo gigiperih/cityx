@@ -37,12 +37,8 @@ class CitiesAdapter :
     }
 
     fun addAll(newList: List<City>) {
-        cities.addAll(newList)
-        notifyDataSetChanged()
-    }
-
-    fun clear() {
         cities.clear()
+        cities.addAll(newList)
         notifyDataSetChanged()
     }
 }

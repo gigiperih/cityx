@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import io.gigiperih.cityx.R
 import io.gigiperih.cityx.domain.mapper.ResultState
 import io.gigiperih.cityx.presentation.CityViewModel

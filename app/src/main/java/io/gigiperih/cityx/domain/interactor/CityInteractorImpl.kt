@@ -32,7 +32,7 @@ class CityInteractorImpl(
             if (!result.isNullOrEmpty()) {
                 emit(
                     ResultState.OnSuccess(
-                        result.chunked(10)[page - 1], "Found ${result.size} cities."
+                        result, "Found ${result.size} cities."
                     )
                 )
             } else {

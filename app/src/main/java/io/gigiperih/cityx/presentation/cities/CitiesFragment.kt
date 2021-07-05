@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class CitiesFragment : Fragment() {
     private val viewModel: CityViewModel by viewModel()
@@ -45,7 +46,9 @@ class CitiesFragment : Fragment() {
     private fun init() {
         val layoutManager = LinearLayoutManager(requireActivity())
         recycler_view_cities.layoutManager = layoutManager
-        citiesAdapter = CitiesAdapter()
+        citiesAdapter = CitiesAdapter { city ->
+            Timber.d("selected_city $city")
+        }
         recycler_view_cities.adapter = citiesAdapter
 
         text_input_search.textChanges()

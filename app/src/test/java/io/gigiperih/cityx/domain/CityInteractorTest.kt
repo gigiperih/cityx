@@ -55,29 +55,30 @@ class CityInteractorTest {
     @Test
     fun `given search param is empty, when search is success, returns correct flows`() =
         coroutinesTestRule.testDispatcher.runBlockingTest {
-            coEvery { mockedRepo.getList() } returns FakeData.sortedSample
-
-            val flow = objectUnderTest.search(keywords = "", page = 1)
-
-            // flow count should be = 2
-            // 1) loading 2) success
-            assertThat(flow.count()).isEqualTo(2)
-            assertThat(flow.first() is ResultState.OnLoading).isTrue()
-            assertThat(flow.last() is ResultState.OnSuccess).isTrue()
-
-            val result = flow.last() as ResultState.OnSuccess
-
-            assertThat(result.data).apply {
-                hasSize(2)
-                isEqualTo(FakeData.sortedSample)
-            }
-
-            assertThat(result.message).apply {
-                isNotEmpty()
-                isEqualTo("Found 2 cities.")
-            }
-
-            coVerify { mockedRepo.getList() }
+//            coEvery { mockedRepo.getList() } returns FakeData.sortedSample
+//
+//            val flow = objectUnderTest.search(keywords = "", page = 1)
+//
+//            // flow count should be = 2
+//            // 1) loading 2) success
+//            assertThat(flow.count()).isEqualTo(2)
+//            assertThat(flow.first() is ResultState.OnLoading).isTrue()
+//            assertThat(flow.last() is ResultState.OnSuccess).isTrue()
+//
+//            val result = flow.last() as ResultState.OnSuccess
+//
+//            assertThat(result.data).apply {
+//                hasSize(2)
+//                isEqualTo(FakeData.sortedSample)
+//            }
+//
+//            assertThat(result.message).apply {
+//                isNotEmpty()
+//                isEqualTo("Found 2 cities.")
+//            }
+//
+//            coVerify { mockedRepo.getList() }
+            TODO("Not yet implemented")
         }
 
     @Test
@@ -129,44 +130,46 @@ class CityInteractorTest {
     @Test
     fun `given multi page of results, when page selected, returns correct chunked list of cities`() =
         coroutinesTestRule.testDispatcher.runBlockingTest {
-            coEvery { mockedRepo.getList() } returns
-                    buildSortedListOfCities("cities_99.json")
-
-            val firstPage =
-                objectUnderTest.search(keywords = "", page = 1).last() as ResultState.OnSuccess
-            val lastPage =
-                objectUnderTest.search(keywords = "", page = 10).last() as ResultState.OnSuccess
-
-            assertThat(firstPage.data).apply {
-                isNotEmpty()
-                hasSize(10)
-            }
-
-            assertThat(lastPage.data).apply {
-                isNotEmpty()
-                hasSize(9)
-            }
-
-            coVerify { mockedRepo.getList() }
-            coVerify(exactly = 0) { mockedRepo.getTrie() }
+//            coEvery { mockedRepo.getList() } returns
+//                    buildSortedListOfCities("cities_99.json")
+//
+//            val firstPage =
+//                objectUnderTest.search(keywords = "", page = 1).last() as ResultState.OnSuccess
+//            val lastPage =
+//                objectUnderTest.search(keywords = "", page = 10).last() as ResultState.OnSuccess
+//
+//            assertThat(firstPage.data).apply {
+//                isNotEmpty()
+//                hasSize(10)
+//            }
+//
+//            assertThat(lastPage.data).apply {
+//                isNotEmpty()
+//                hasSize(9)
+//            }
+//
+//            coVerify { mockedRepo.getList() }
+//            coVerify(exactly = 0) { mockedRepo.getTrie() }
+            TODO("Not yet implemented")
         }
 
     @Test
     fun `given large data, when search without param is success, returns default list without process`() =
         coroutinesTestRule.testDispatcher.runBlockingTest {
-            coEvery { mockedRepo.getList() } returns
-                    buildSortedListOfCities("cities_100k.json")
-
-            val result =
-                objectUnderTest.search(keywords = "", page = 1).last() as ResultState.OnSuccess
-
-            assertThat(result.data).apply {
-                isNotEmpty()
-                hasSize(10)
-            }
-
-            coVerify { mockedRepo.getList() }
-            coVerify(exactly = 0) { mockedRepo.getTrie() }
+//            coEvery { mockedRepo.getList() } returns
+//                    buildSortedListOfCities("cities_100k.json")
+//
+//            val result =
+//                objectUnderTest.search(keywords = "", page = 1).last() as ResultState.OnSuccess
+//
+//            assertThat(result.data).apply {
+//                isNotEmpty()
+//                hasSize(10)
+//            }
+//
+//            coVerify { mockedRepo.getList() }
+//            coVerify(exactly = 0) { mockedRepo.getTrie() }
+            TODO("Not yet implemented")
         }
 
     @Test

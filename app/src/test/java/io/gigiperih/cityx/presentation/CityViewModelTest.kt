@@ -61,7 +61,7 @@ class CityViewModelTest {
 //        coEvery { mockedInteractor.search("", 1) } returns
 //                flowWithResult()
 
-        objectUnderTest.search()
+        // objectUnderTest.search()
 
         val slot = slot<ResultState<List<City>>>()
         verify { testObserver.onChanged(capture(slot)) }

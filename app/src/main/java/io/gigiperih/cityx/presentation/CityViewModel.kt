@@ -18,12 +18,13 @@ class CityViewModel(
     val resultState: LiveData<ResultState<List<City>>> = _resultState
 
     init {
-        _resultState.postValue(ResultState.OnError("Eewww"))
+        search("")
     }
 
-    fun get() {
+    fun search(keywords: String) {
+        _resultState.postValue(ResultState.OnLoading())
         viewModelScope.launch {
-            interactor.search("", 2).collectLatest {
+            interactor.search(keywords, 1).collectLatest {
                 Timber.d("kememmmmmms $it")
                 _resultState.postValue(it)
             }

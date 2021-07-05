@@ -5,19 +5,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import io.gigiperih.cityx.R
 import io.gigiperih.cityx.domain.mapper.ResultState
 import io.gigiperih.cityx.presentation.CityViewModel
 import io.gigiperih.cityx.utils.extensions.gone
+import io.gigiperih.cityx.utils.extensions.textChanges
 import io.gigiperih.cityx.utils.extensions.visible
 import kotlinx.android.synthetic.main.fragment_cities.*
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CitiesFragment : Fragment() {
     private val viewModel: CityViewModel by viewModel()
     private var citiesAdapter: CitiesAdapter? = null
+
+    private var searchQuery = "Bandong"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,6 +46,13 @@ class CitiesFragment : Fragment() {
         recycler_view_cities.layoutManager = layoutManager
         citiesAdapter = CitiesAdapter()
         recycler_view_cities.adapter = citiesAdapter
+
+        text_input_search.textChanges()
+            .debounce(300)
+            .onEach {
+                viewModel.search(it.toString())
+            }
+            .launchIn(lifecycleScope)
     }
 
     private fun updateUi() {
@@ -62,6 +75,5 @@ class CitiesFragment : Fragment() {
                 }
             }
         })
-        viewModel.get()
     }
 }

@@ -7,7 +7,6 @@ import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.domain.interactor.CityInteractor
 import io.gigiperih.cityx.domain.mapper.ResultState
 import io.gigiperih.cityx.utils.CoroutineTestRule
-import io.gigiperih.cityx.utils.flowWithResult
 import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.ObsoleteCoroutinesApi
@@ -62,7 +61,7 @@ class CityViewModelTest {
 //        coEvery { mockedInteractor.search("", 1) } returns
 //                flowWithResult()
 
-        objectUnderTest.get()
+        objectUnderTest.search()
 
         val slot = slot<ResultState<List<City>>>()
         verify { testObserver.onChanged(capture(slot)) }

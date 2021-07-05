@@ -10,6 +10,11 @@ Find some cities that you wanted to go!
 - Android Architecture Component with clean arch approach
 - Unit tested in all layers
 
+## run and build
+- build: `./gradlew assembleDebug`
+- test: `./gradlew testDebugUnitTest`
+- known issue: increase `jvm heap` size if OOM occur when running tests
+
 ## feature
 - implemented using `pragmatic TDD`
 - use `Trie()` data structure for faster runtime search

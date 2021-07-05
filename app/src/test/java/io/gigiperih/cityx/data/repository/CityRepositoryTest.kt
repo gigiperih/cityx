@@ -44,30 +44,34 @@ class CityRepositoryTest {
     @Test
     fun `given valid request, when getList is success, should return expected list of cities`() =
         coroutinesTestRule.testDispatcher.runBlockingTest {
-            coEvery { mockedService.getList() } returns FakeData.sortedSample
-
+//            coEvery { mockedService.getList() } returns FakeData.sortedSample
+//
 //            val result = objectUnderTest.getList()
 //
 //            assertThat(result).apply {
 //                isEqualTo(FakeData.sortedSample)
 //                hasSize(2)
 //            }
+//
+//            coVerify { mockedService.getList() }
 
-            coVerify { mockedService.getList() }
+            TODO("Not yet implemented")
         }
 
     @Test
     fun `given valid request, when getTrie is success, should return expected trie of cities`() =
         coroutinesTestRule.testDispatcher.runBlockingTest {
-            coEvery { mockedService.getTrie() } returns FakeData.sortedTrie
+//            coEvery { mockedService.getTrie() } returns FakeData.sortedTrie
+//
+//            val result = objectUnderTest.getTrie()
+//
+//            assertThat(result).apply {
+//                isNotNull()
+//                isEqualTo(FakeData.sortedTrie)
+//            }
+//
+//            coVerify { mockedService.getTrie() }
 
-            val result = objectUnderTest.getTrie()
-
-            assertThat(result).apply {
-                isNotNull()
-                isEqualTo(FakeData.sortedTrie)
-            }
-
-            coVerify { mockedService.getTrie() }
+            TODO("Not yet implemented")
         }
 }

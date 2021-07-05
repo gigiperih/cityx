@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CityX</string>
+    <string name="search_cities">Search cities</string>
+    <string name="fetching">Fetching...</string>
 </resources>

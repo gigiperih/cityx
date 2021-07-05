@@ -21,12 +21,12 @@ class CityInteractorImpl(
 
             val result = if (keywords.isNullOrEmpty()) {
                 repository
-                    .getTrie()
+                    .getCities()
                     .root()
                     .traverse()
             } else {
                 repository
-                    .getTrie()
+                    .getCities()
                     .filterPrefix(keywords.getValue())
                     .traverse()
             }

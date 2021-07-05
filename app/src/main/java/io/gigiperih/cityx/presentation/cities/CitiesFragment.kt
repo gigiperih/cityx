@@ -5,9 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import io.gigiperih.cityx.R
-import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.domain.mapper.ResultState
 import io.gigiperih.cityx.presentation.CityViewModel
 import kotlinx.android.synthetic.main.fragment_cities.*
@@ -15,6 +14,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CitiesFragment : Fragment() {
     private val viewModel: CityViewModel by viewModel()
+    private var citiesAdapter: CitiesAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,7 +26,20 @@ class CitiesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().title = "A lot of cities"
 
+        init()
+        updateUi()
+    }
+
+    private fun init() {
+        val layoutManager = LinearLayoutManager(requireActivity())
+        recycler_view_cities.layoutManager = layoutManager
+        citiesAdapter = CitiesAdapter()
+        recycler_view_cities.adapter = citiesAdapter
+    }
+
+    private fun updateUi() {
         viewModel.resultState.observe(requireActivity(), { resultState ->
             when (resultState) {
                 is ResultState.OnLoading -> {
@@ -35,6 +48,9 @@ class CitiesFragment : Fragment() {
                 is ResultState.OnSuccess -> {
                     text_view.text =
                         "Success message: ${resultState.message}"
+                    resultState.data?.let { cities ->
+                        citiesAdapter?.addAll(cities)
+                    }
                 }
                 is ResultState.OnError -> {
                     text_view.text = "Error: ${resultState.message}"

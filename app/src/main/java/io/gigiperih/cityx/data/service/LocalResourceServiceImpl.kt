@@ -45,6 +45,5 @@ class LocalResourceServiceImpl(
         return withContext(dispatchers.io()) {
             return@withContext trie
         }
-
     }
 }

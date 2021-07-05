@@ -22,7 +22,7 @@ class CityInteractorImpl(
             val result = if (keywords.isNullOrEmpty()) {
                 repository
                     .getTrie()
-                    .showAll()
+                    .root()
                     .traverse()
             } else {
                 repository

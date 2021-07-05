@@ -2,14 +2,14 @@ package io.gigiperih.cityx.presentation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.MutableLiveData
 import io.gigiperih.cityx.R
 
 
-class MainActivity : AppCompatActivity() {
-    private val stringCity: MutableLiveData<String> = MutableLiveData()
+class CityActivity : AppCompatActivity(R.layout.activity_city) {
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Make sure this is before calling super.onCreate
+        setTheme(R.style.Theme_CityX)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
     }
 }

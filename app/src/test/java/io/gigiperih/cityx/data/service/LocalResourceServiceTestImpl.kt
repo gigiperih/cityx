@@ -7,14 +7,16 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.data.mapper.sortAlphabetically
 import io.gigiperih.cityx.data.structure.Trie
+import io.gigiperih.cityx.utils.dispatcher.DefaultDispatcherProvider
+import io.gigiperih.cityx.utils.dispatcher.DispatcherProvider
+import kotlinx.coroutines.withContext
 
 /**
- * it's kinda hard to mock large data :)
- * this class provide similar implementation of actual class
- *
- * TODO: refactor for mocking after abstraction processes completed
+ * imitate real parser so we don't have to mock context ;)
  */
-class LocalResourceServiceTestImpl(file: String) : LocalResourceService {
+class LocalResourceServiceTestImpl(
+    private val dispatchers: DispatcherProvider = DefaultDispatcherProvider()
+) : LocalResourceService {
     private val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
     private val listType = Types.newParameterizedType(List::class.java, City::class.java)
     private val adapter = moshi.adapter<List<City>>(listType)
@@ -23,24 +25,37 @@ class LocalResourceServiceTestImpl(file: String) : LocalResourceService {
 
     init {
         // parse list
+        parseList()
+
+        // build trie
+        buildTrie()
+
+    }
+
+    private fun parseList() {
         cities = try {
-            this::class.java.classLoader?.getResource(file)?.readText()
+            this::class.java.classLoader?.getResource("cities_100k.json")?.readText()
                 ?.let { adapter.fromJson(it) }.sortAlphabetically()
         } catch (e: JsonDataException) {
             null
         }
+    }
 
-        // build trie
+    private fun buildTrie() {
         cities?.forEach {
             trie.insert("${it.name} ${it.country}", it)
         }
     }
 
-    override fun getList(): List<City>? {
-        return cities
+    override suspend fun getList(): List<City>? {
+        return withContext(dispatchers.io()) {
+            return@withContext cities
+        }
     }
 
-    override fun getTrie(): Trie {
-        return trie
+    override suspend fun getTrie(): Trie {
+        return withContext(dispatchers.io()) {
+            return@withContext trie
+        }
     }
 }

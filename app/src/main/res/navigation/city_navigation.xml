@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/city_navigation"
+    app:startDestination="@id/citiesFragment">
+
+    <fragment
+        android:id="@+id/citiesFragment"
+        android:name="io.gigiperih.cityx.presentation.cities.CitiesFragment"
+        android:label="CitiesFragment">
+        <action
+            android:id="@+id/action_citiesFragment_to_cityFragment"
+            app:destination="@id/cityFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cityFragment"
+        android:name="io.gigiperih.cityx.presentation.city.CityFragment"
+        android:label="CityFragment" />
+</navigation>

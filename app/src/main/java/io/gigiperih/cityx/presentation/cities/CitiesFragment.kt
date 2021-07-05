@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import io.gigiperih.cityx.R
 import io.gigiperih.cityx.domain.mapper.ResultState
 import io.gigiperih.cityx.presentation.CityViewModel
+import io.gigiperih.cityx.utils.extensions.gone
+import io.gigiperih.cityx.utils.extensions.visible
 import kotlinx.android.synthetic.main.fragment_cities.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -43,17 +45,19 @@ class CitiesFragment : Fragment() {
         viewModel.resultState.observe(requireActivity(), { resultState ->
             when (resultState) {
                 is ResultState.OnLoading -> {
-                    text_view.text = "Loading"
+                    progress_circular.visible()
                 }
                 is ResultState.OnSuccess -> {
-                    text_view.text =
-                        "Success message: ${resultState.message}"
+                    progress_circular.gone()
+
+                    text_information.text = resultState.message
                     resultState.data?.let { cities ->
                         citiesAdapter?.addAll(cities)
                     }
                 }
                 is ResultState.OnError -> {
-                    text_view.text = "Error: ${resultState.message}"
+                    progress_circular.gone()
+                    text_information.text = resultState.message
                 }
             }
         })

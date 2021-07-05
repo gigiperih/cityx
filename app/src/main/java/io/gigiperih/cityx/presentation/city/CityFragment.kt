@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import io.gigiperih.cityx.R
+import io.gigiperih.cityx.presentation.CityActivity
 import kotlinx.android.synthetic.main.fragment_city.*
 
 
@@ -28,8 +30,12 @@ class CityFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.let { bundle ->
-            lat = bundle.getDouble("lat")
-            lon = bundle.getDouble("lon")
+            lat = bundle.getDouble(CityActivity.KEY_LAT)
+            lon = bundle.getDouble(CityActivity.KEY_LON)
+        }
+
+        fab_back.setOnClickListener {
+            findNavController().navigateUp()
         }
 
         setupMapView(savedInstanceState)

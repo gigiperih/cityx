@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.gigiperih.cityx.R
 import io.gigiperih.cityx.domain.mapper.ResultState
+import io.gigiperih.cityx.presentation.CityActivity
 import io.gigiperih.cityx.presentation.CityViewModel
 import io.gigiperih.cityx.utils.extensions.gone
 import io.gigiperih.cityx.utils.extensions.textChanges
@@ -48,7 +49,10 @@ class CitiesFragment : Fragment() {
             val nav = findNavController()
             nav.navigate(
                 R.id.action_citiesFragment_to_cityFragment,
-                bundleOf("lat" to city.coord.lat, "lon" to city.coord.lon)
+                bundleOf(
+                    CityActivity.KEY_LAT to city.coord.lat,
+                    CityActivity.KEY_LON to city.coord.lon
+                )
             )
         }
         recycler_view_cities.adapter = citiesAdapter

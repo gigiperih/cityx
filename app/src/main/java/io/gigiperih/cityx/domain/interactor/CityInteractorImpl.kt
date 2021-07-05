@@ -14,7 +14,7 @@ class CityInteractorImpl(
     private val repository: CityRepository,
     private val dispatchers: DispatcherProvider = DefaultDispatcherProvider()
 ) : CityInteractor {
-    override fun search(keywords: String?, page: Int) =
+    override fun search(keywords: String?) =
         flow<ResultState<List<City>>> {
             // init as loading state
             emit(ResultState.OnLoading())

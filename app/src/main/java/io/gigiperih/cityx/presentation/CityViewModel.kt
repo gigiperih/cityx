@@ -23,8 +23,7 @@ class CityViewModel(
 
     fun search(keywords: String) {
         viewModelScope.launch {
-            interactor.search(keywords, 1).collectLatest {
-                Timber.d("kememmmmmms $it")
+            interactor.search(keywords).collectLatest {
                 _resultState.postValue(it)
             }
         }

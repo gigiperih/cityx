@@ -12,8 +12,9 @@ class CityActivity : AppCompatActivity(R.layout.activity_city) {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Make sure this is before calling super.onCreate
+        // update from splash
         setTheme(R.style.Theme_CityX)
+
         super.onCreate(savedInstanceState)
     }
 }

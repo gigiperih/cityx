@@ -36,7 +36,10 @@ class CitiesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_cities, container, false)
+        return inflater.inflate(
+            R.layout.fragment_cities,
+            container, false
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,6 +50,11 @@ class CitiesFragment : Fragment() {
     }
 
     private fun init() {
+        setupAdapter()
+        setupSearch()
+    }
+
+    private fun setupAdapter() {
         val layoutManager = LinearLayoutManager(requireActivity())
         recycler_view_cities.layoutManager = layoutManager
         citiesAdapter = CitiesAdapter { city ->
@@ -60,7 +68,9 @@ class CitiesFragment : Fragment() {
             )
         }
         recycler_view_cities.adapter = citiesAdapter
+    }
 
+    private fun setupSearch() {
         text_input_search.textChanges()
             .filterNot { it.isNullOrEmpty() }
             .debounce(666)

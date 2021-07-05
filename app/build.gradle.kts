@@ -68,16 +68,18 @@ dependencies {
 
 
     // nav arch
-    implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
-    implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
+    val navVersion = "2.3.5"
+    implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
+    implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
 
     // utils
     implementation("androidx.fragment:fragment-ktx:1.3.5")
 
     // ktx arch components
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.3.1")
+    val ktxVersion = "2.3.1"
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$ktxVersion")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$ktxVersion")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$ktxVersion")
 
     // coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
@@ -89,18 +91,10 @@ dependencies {
     // JSON library
     implementation("com.squareup.moshi:moshi-kotlin:1.12.0")
 
-    // TODO remove it later
-    // helper to log and recreate large object in testing
-    implementation("com.jakewharton.timber:timber:4.7.1")
-
     // unit testing libraries
     testImplementation("junit:junit:4.13.2")
     testImplementation("android.arch.core:core-testing:1.1.1")
     testImplementation("com.google.truth:truth:1.1.3")
     testImplementation("io.mockk:mockk:1.10.6")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3")
-
-    // instrumentation testing libraries
-    androidTestImplementation("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
 }

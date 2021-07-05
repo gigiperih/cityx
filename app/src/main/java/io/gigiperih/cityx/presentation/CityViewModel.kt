@@ -9,7 +9,6 @@ import io.gigiperih.cityx.domain.interactor.CityInteractor
 import io.gigiperih.cityx.domain.mapper.ResultState
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class CityViewModel(
     val interactor: CityInteractor

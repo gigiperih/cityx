@@ -1,15 +1,16 @@
 package io.gigiperih.cityx.presentation
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
 import com.google.common.truth.Truth.assertThat
-import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.domain.interactor.CityInteractor
 import io.gigiperih.cityx.domain.mapper.ResultState
 import io.gigiperih.cityx.utils.CoroutineTestRule
-import io.mockk.*
+import io.mockk.coVerify
+import io.mockk.mockk
+import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.ObsoleteCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Before
@@ -22,9 +23,9 @@ import org.junit.runners.JUnit4
 @ExperimentalCoroutinesApi
 @RunWith(JUnit4::class)
 class CityViewModelTest {
-    private lateinit var objectUnderTest: CityViewModel
 
-    var mockedInteractor = mockk<CityInteractor>()
+    private lateinit var objectUnderTest: CityViewModel
+    var mockedInteractor = mockk<CityInteractor>(relaxed = true)
 
     @Rule
     @JvmField
@@ -37,7 +38,8 @@ class CityViewModelTest {
     @Before
     fun setUp() {
         objectUnderTest = CityViewModel(
-            mockedInteractor
+            mockedInteractor,
+            coroutinesTestRule.testDispatcherProvider
         )
 
     }
@@ -53,22 +55,25 @@ class CityViewModelTest {
     }
 
     @Test
-    fun `trivial test`() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        // TODO: fix unit test ASAP!
-        val testObserver = createTestObserver()
-        objectUnderTest.resultState.observeForever(testObserver)
+    fun `given request without param, verify interactor executing expected param`() =
+        coroutinesTestRule.testDispatcher.runBlockingTest {
+            launch {
+                assertThat(objectUnderTest.resultState.value is ResultState.OnLoading).isTrue()
+                objectUnderTest.search("")
 
-//        coEvery { mockedInteractor.search("", 1) } returns
-//                flowWithResult()
+                coVerify { mockedInteractor.search("") }
+            }
+        }
 
-        // objectUnderTest.search()
+    @Test
+    fun `given request with param, verify interactor executing expected param`() =
+        coroutinesTestRule.testDispatcher.runBlockingTest {
+            launch {
+                assertThat(objectUnderTest.resultState.value is ResultState.OnLoading).isTrue()
+                objectUnderTest.search("gil")
 
-        val slot = slot<ResultState<List<City>>>()
-        verify { testObserver.onChanged(capture(slot)) }
-
-        //coVerify { mockedInteractor.search("", 1) }
-    }
-
-    private fun createTestObserver(): Observer<ResultState<List<City>>> =
-        spyk(Observer { })
+                coVerify { mockedInteractor.search("gil") }
+                coVerify(exactly = 0) { mockedInteractor.search("") }
+            }
+        }
 }

@@ -8,7 +8,7 @@ import io.gigiperih.cityx.R
 import io.gigiperih.cityx.data.City
 import kotlinx.android.synthetic.main.item_city.view.*
 
-class CitiesAdapter :
+class CitiesAdapter(private val onSelected: (City) -> Unit) :
     RecyclerView.Adapter<CitiesAdapter.CityViewHolder>() {
     private val cities = mutableListOf<City>()
 
@@ -25,10 +25,13 @@ class CitiesAdapter :
 
     override fun getItemCount() = cities.size
 
-    class CityViewHolder(itemView: View) :
+    inner class CityViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
 
         fun bind(city: City) {
+            itemView.setOnClickListener {
+                onSelected.invoke(city)
+            }
             itemView.text_city.text = city.name
             itemView.text_country.text = city.country
             itemView.text_lat.text = "Lat: ${city.coord.lat}"
@@ -39,6 +42,11 @@ class CitiesAdapter :
     fun addAll(newList: List<City>) {
         cities.clear()
         cities.addAll(newList)
+        notifyDataSetChanged()
+    }
+
+    fun clear() {
+        cities.clear()
         notifyDataSetChanged()
     }
 }

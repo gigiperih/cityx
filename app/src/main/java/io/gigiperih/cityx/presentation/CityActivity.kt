@@ -6,6 +6,10 @@ import io.gigiperih.cityx.R
 
 
 class CityActivity : AppCompatActivity(R.layout.activity_city) {
+    companion object {
+        const val KEY_LAT = "lat"
+        const val KEY_LON = "lon"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Make sure this is before calling super.onCreate

@@ -63,6 +63,10 @@ dependencies {
     implementation("com.google.android.material:material:1.4.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
 
+    // google map
+    implementation("com.google.android.gms:play-services-places:17.0.0")
+
+
     // nav arch
     implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
     implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
@@ -95,7 +99,6 @@ dependencies {
     testImplementation("com.google.truth:truth:1.1.3")
     testImplementation("io.mockk:mockk:1.10.6")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3")
-    testImplementation("com.jraska.livedata:testing-ktx:1.2.0")
 
     // instrumentation testing libraries
     androidTestImplementation("androidx.test.ext:junit:1.1.3")

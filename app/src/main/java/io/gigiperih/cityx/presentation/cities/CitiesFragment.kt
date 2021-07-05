@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import io.gigiperih.cityx.R
+import io.gigiperih.cityx.data.City
 import io.gigiperih.cityx.domain.mapper.ResultState
 import io.gigiperih.cityx.presentation.CityViewModel
 import kotlinx.android.synthetic.main.fragment_cities.*
@@ -32,7 +34,7 @@ class CitiesFragment : Fragment() {
                 }
                 is ResultState.OnSuccess -> {
                     text_view.text =
-                        "Success: ${resultState.message} data: ${resultState.data?.size} "
+                        "Success message: ${resultState.message}"
                 }
                 is ResultState.OnError -> {
                     text_view.text = "Error: ${resultState.message}"

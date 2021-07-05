@@ -25,12 +25,11 @@ class CityViewModel(
 
     init {
         _resultState.postValue(ResultState.OnError("Eewww"))
-
     }
 
     fun get() {
         viewModelScope.launch {
-            interactor.search("", 1).collectLatest {
+            interactor.search("", 2).collectLatest {
                 Timber.d("kememmmmmms $it")
                 _resultState.postValue(it)
             }

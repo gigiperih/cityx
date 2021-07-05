@@ -74,7 +74,7 @@ class CityInteractorTest {
 
             assertThat(result.message).apply {
                 isNotEmpty()
-                isEqualTo("Some useful information")
+                isEqualTo("Found 2 cities.")
             }
 
             coVerify { mockedRepo.getList() }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -20,7 +21,6 @@ import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 class CitiesFragment : Fragment() {
     private val viewModel: CityViewModel by viewModel()
@@ -36,7 +36,6 @@ class CitiesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().title = "A lot of cities"
 
         init()
         updateUi()
@@ -47,8 +46,10 @@ class CitiesFragment : Fragment() {
         recycler_view_cities.layoutManager = layoutManager
         citiesAdapter = CitiesAdapter { city ->
             val nav = findNavController()
-            nav.navigate(R.id.action_citiesFragment_to_cityFragment)
-            Timber.d("selected_city $city")
+            nav.navigate(
+                R.id.action_citiesFragment_to_cityFragment,
+                bundleOf("lat" to city.coord.lat, "lon" to city.coord.lon)
+            )
         }
         recycler_view_cities.adapter = citiesAdapter
 

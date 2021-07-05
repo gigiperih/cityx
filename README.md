@@ -15,9 +15,11 @@ Find some cities that you wanted to go!
 - test: `./gradlew testDebugUnitTest`
 - known issue: increase `jvm heap` size if OOM occur when running tests
 
+![](https://i.ibb.co/9q4b0Fj/Screen-Shot-2021-07-05-at-21-21-03.png)
+
 ## feature
 - implemented using `pragmatic TDD`
-- use `Trie()` data structure for faster runtime search
+- use `Trie()` data structure for faster runtime search (better than linear time complexity)
 - automated kaban github-project can be found here: https://github.com/gigiperih/cityx/projects/1
 - sneak peak:
 

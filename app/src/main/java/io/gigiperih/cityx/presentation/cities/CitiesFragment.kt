@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.gigiperih.cityx.R
 import io.gigiperih.cityx.domain.mapper.ResultState
@@ -24,8 +25,6 @@ import timber.log.Timber
 class CitiesFragment : Fragment() {
     private val viewModel: CityViewModel by viewModel()
     private var citiesAdapter: CitiesAdapter? = null
-
-    private var searchQuery = "Bandong"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,6 +46,8 @@ class CitiesFragment : Fragment() {
         val layoutManager = LinearLayoutManager(requireActivity())
         recycler_view_cities.layoutManager = layoutManager
         citiesAdapter = CitiesAdapter { city ->
+            val nav = findNavController()
+            nav.navigate(R.id.action_citiesFragment_to_cityFragment)
             Timber.d("selected_city $city")
         }
         recycler_view_cities.adapter = citiesAdapter

@@ -20,46 +20,31 @@ class LocalResourceServiceImpl(
     private val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
     private val listType = Types.newParameterizedType(List::class.java, City::class.java)
     private val adapter = moshi.adapter<List<City>>(listType)
-    private var cities: List<City>? = null
     private val trie = Trie()
 
     init {
-        // parse list
-        parseList()
-
         // build trie
         buildTrie()
-
-    }
-
-    private fun parseList() {
-        cities = try {
-            context.resources.openRawResource(R.raw.cities).bufferedReader().readText()
-                ?.let { adapter.fromJson(it) }.sortAlphabetically()
-        } catch (e: JsonDataException) {
-            null
-        }
     }
 
     private fun buildTrie() {
+        val cities = try {
+            context.resources
+                .openRawResource(R.raw.cities)
+                .bufferedReader()
+                .readText()
+                .let { adapter.fromJson(it) }.sortAlphabetically()
+        } catch (e: JsonDataException) {
+            null
+        }
         cities?.forEach {
             trie.insert("${it.name} ${it.country}", it)
         }
     }
 
-    override suspend fun getList(): List<City>? {
-//        return withContext(dispatchers.io()) {
-//            return@withContext cities
-//        }
-
-        return cities
-    }
-
-    override suspend fun getTrie(): Trie {
-//        return withContext(dispatchers.io()) {
-//            return@withContext trie
-//        }
-
-        return trie
+    override suspend fun fetchResource(): Trie {
+        return withContext(dispatchers.io()) {
+            return@withContext trie
+        }
     }
 }

@@ -55,9 +55,9 @@ class CityInteractorTest {
     @Test
     fun `given search param is empty, when search is success, returns correct flows`() =
         coroutinesTestRule.testDispatcher.runBlockingTest {
-            coEvery { mockedRepo.getList() } returns FakeData.sortedSample
+            coEvery { mockedRepo.getCities() } returns FakeData.sortedSample.buildTrie()
 
-            val flow = objectUnderTest.search(keywords = "", page = 1)
+            val flow = objectUnderTest.search(keywords = "")
 
             // flow count should be = 2
             // 1) loading 2) success
@@ -77,15 +77,15 @@ class CityInteractorTest {
                 isEqualTo("Found 2 cities.")
             }
 
-            coVerify { mockedRepo.getList() }
+            coVerify { mockedRepo.getCities() }
         }
 
     @Test
     fun `given search param is not empty, when result is found, returns correct flows`() =
         coroutinesTestRule.testDispatcher.runBlockingTest {
-            coEvery { mockedRepo.getTrie() } returns FakeData.sortedTrie
+            coEvery { mockedRepo.getCities() } returns FakeData.sortedTrie
 
-            val flow = objectUnderTest.search(keywords = "No", page = 1)
+            val flow = objectUnderTest.search(keywords = "No")
 
             assertThat(flow.count()).isEqualTo(2)
             assertThat(flow.first() is ResultState.OnLoading).isTrue()
@@ -107,15 +107,15 @@ class CityInteractorTest {
                 )
             }
 
-            coVerify { mockedRepo.getTrie() }
+            coVerify { mockedRepo.getCities() }
         }
 
     @Test
     fun `given search param is not empty, when result is not found, returns Result not found`() =
         coroutinesTestRule.testDispatcher.runBlockingTest {
-            coEvery { mockedRepo.getTrie() } returns FakeData.sortedTrie
+            coEvery { mockedRepo.getCities() } returns FakeData.sortedTrie
 
-            val flow = objectUnderTest.search(keywords = "Xoxo", page = 1)
+            val flow = objectUnderTest.search(keywords = "Xoxo")
             assertThat(flow.count()).isEqualTo(2)
             assertThat(flow.first() is ResultState.OnLoading).isTrue()
             assertThat(flow.last() is ResultState.OnError).isTrue()
@@ -123,64 +123,39 @@ class CityInteractorTest {
             val result = flow.last() as ResultState.OnError
             assertThat(result.message).isEqualTo("Result not found")
 
-            coVerify { mockedRepo.getTrie() }
+            coVerify { mockedRepo.getCities() }
         }
 
-    @Test
-    fun `given multi page of results, when page selected, returns correct chunked list of cities`() =
-        coroutinesTestRule.testDispatcher.runBlockingTest {
-            coEvery { mockedRepo.getList() } returns
-                    buildSortedListOfCities("cities_99.json")
-
-            val firstPage =
-                objectUnderTest.search(keywords = "", page = 1).last() as ResultState.OnSuccess
-            val lastPage =
-                objectUnderTest.search(keywords = "", page = 10).last() as ResultState.OnSuccess
-
-            assertThat(firstPage.data).apply {
-                isNotEmpty()
-                hasSize(10)
-            }
-
-            assertThat(lastPage.data).apply {
-                isNotEmpty()
-                hasSize(9)
-            }
-
-            coVerify { mockedRepo.getList() }
-            coVerify(exactly = 0) { mockedRepo.getTrie() }
-        }
 
     @Test
-    fun `given large data, when search without param is success, returns default list without process`() =
+    fun `given large data, when search without param is success, returns trie root`() =
         coroutinesTestRule.testDispatcher.runBlockingTest {
-            coEvery { mockedRepo.getList() } returns
-                    buildSortedListOfCities("cities_100k.json")
+            coEvery { mockedRepo.getCities() } returns
+                    buildSortedListOfCities("cities_100k.json").buildTrie()
 
             val result =
-                objectUnderTest.search(keywords = "", page = 1).last() as ResultState.OnSuccess
+                objectUnderTest.search(keywords = "").last() as ResultState.OnSuccess
 
             assertThat(result.data).apply {
                 isNotEmpty()
-                hasSize(10)
+                hasSize(83603)
             }
 
-            coVerify { mockedRepo.getList() }
-            coVerify(exactly = 0) { mockedRepo.getTrie() }
+            coVerify { mockedRepo.getCities() }
         }
 
     @Test
     fun `given large data, when search with param is success, return list of results`() =
         coroutinesTestRule.testDispatcher.runBlockingTest {
-            coEvery { mockedRepo.getTrie() } returns
+            coEvery { mockedRepo.getCities() } returns
                     buildSortedListOfCities("cities_100k.json").buildTrie()
 
             val result =
-                objectUnderTest.search(keywords = "Ab", page = 1).last() as ResultState.OnSuccess
+                objectUnderTest.search(keywords = "Ab").last() as ResultState.OnSuccess
 
             assertThat(result.data).apply {
                 isNotEmpty()
-                hasSize(10)
+                hasSize(183)
             }
             assertThat(result.data?.get(0)).isEqualTo(
                 City(
@@ -189,16 +164,16 @@ class CityInteractorTest {
                 )
             )
 
-            coVerify { mockedRepo.getTrie() }
+            coVerify { mockedRepo.getCities() }
         }
 
     @Test
-    fun `given large data, when search with param is failing, return empty list`() =
+    fun `given large data, when search with param is failing, returns result not found`() =
         coroutinesTestRule.testDispatcher.runBlockingTest {
-            coEvery { mockedRepo.getTrie() } returns
+            coEvery { mockedRepo.getCities() } returns
                     buildSortedListOfCities("cities_100k.json").buildTrie()
 
-            val flow = objectUnderTest.search(keywords = "Xoxoxoxoxo", page = 1)
+            val flow = objectUnderTest.search(keywords = "Xoxoxoxoxo")
             assertThat(flow.count()).isEqualTo(2)
             assertThat(flow.first() is ResultState.OnLoading).isTrue()
             assertThat(flow.last() is ResultState.OnError).isTrue()
@@ -206,7 +181,7 @@ class CityInteractorTest {
             val result = flow.last() as ResultState.OnError
             assertThat(result.message).isEqualTo("Result not found")
 
-            coVerify { mockedRepo.getTrie() }
+            coVerify { mockedRepo.getCities() }
         }
 
     @Test
@@ -218,17 +193,17 @@ class CityInteractorTest {
             val smallDataInteractor = CityInteractorImpl(smallDataRepo)
             val largeDataInteractor = CityInteractorImpl(largeDataRepo)
 
-            coEvery { smallDataRepo.getTrie() } returns
+            coEvery { smallDataRepo.getCities() } returns
                     buildSortedListOfCities("cities_2.json").buildTrie()
-            coEvery { largeDataRepo.getTrie() } returns
+            coEvery { largeDataRepo.getCities() } returns
                     buildSortedListOfCities("cities_100k.json").buildTrie()
 
             val smallTimeExec = measureNanoTime {
-                smallDataInteractor.search(keywords = "No", page = 1)
+                smallDataInteractor.search(keywords = "No")
             }
 
             val largeTimeExec = measureNanoTime {
-                largeDataInteractor.search(keywords = "No", page = 1)
+                largeDataInteractor.search(keywords = "No")
             }
 
             // relative time complexity
@@ -241,16 +216,17 @@ class CityInteractorTest {
                 isLessThan(smallTimeExec * 50000)
             }
 
-            val smallResult = smallDataInteractor.search(keywords = "No", page = 1)
+            val smallResult = smallDataInteractor.search(keywords = "No")
                 .last() as ResultState.OnSuccess
 
             // results > 10 items resulting in multi-page response
-            val largeResult = largeDataInteractor.search(keywords = "No", page = 1)
+            val largeResult = largeDataInteractor.search(keywords = "No")
                 .last() as ResultState.OnSuccess
 
             assertThat(smallResult.data)
                 .hasSize(1)
             assertThat(largeResult.data)
-                .hasSize(10)
+                .hasSize(889)
+
         }
 }

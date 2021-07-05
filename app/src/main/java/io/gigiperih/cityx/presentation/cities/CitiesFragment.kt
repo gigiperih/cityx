@@ -17,12 +17,16 @@ import io.gigiperih.cityx.utils.extensions.gone
 import io.gigiperih.cityx.utils.extensions.textChanges
 import io.gigiperih.cityx.utils.extensions.visible
 import kotlinx.android.synthetic.main.fragment_cities.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 class CitiesFragment : Fragment() {
     private val viewModel: CityViewModel by viewModel()
     private var citiesAdapter: CitiesAdapter? = null
@@ -32,7 +36,10 @@ class CitiesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_cities, container, false)
+        return inflater.inflate(
+            R.layout.fragment_cities,
+            container, false
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -43,6 +50,11 @@ class CitiesFragment : Fragment() {
     }
 
     private fun init() {
+        setupAdapter()
+        setupSearch()
+    }
+
+    private fun setupAdapter() {
         val layoutManager = LinearLayoutManager(requireActivity())
         recycler_view_cities.layoutManager = layoutManager
         citiesAdapter = CitiesAdapter { city ->
@@ -56,10 +68,12 @@ class CitiesFragment : Fragment() {
             )
         }
         recycler_view_cities.adapter = citiesAdapter
+    }
 
+    private fun setupSearch() {
         text_input_search.textChanges()
             .filterNot { it.isNullOrEmpty() }
-            .debounce(1000)
+            .debounce(666)
             .onEach {
                 viewModel.search(it.toString())
             }
@@ -70,7 +84,7 @@ class CitiesFragment : Fragment() {
         viewModel.resultState.observe(requireActivity(), { resultState ->
             when (resultState) {
                 is ResultState.OnLoading -> {
-                    text_information.text = "Fetching..."
+                    text_information.text = getString(R.string.fetching)
                     progress_circular.visible()
                 }
                 is ResultState.OnSuccess -> {

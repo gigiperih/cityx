@@ -3,8 +3,9 @@ package io.gigiperih.cityx.data.repository
 import com.google.common.truth.Truth.assertThat
 import io.gigiperih.cityx.data.service.LocalResourceService
 import io.gigiperih.cityx.domain.repository.CityRepository
-import io.gigiperih.cityx.fake.FakeData
 import io.gigiperih.cityx.utils.CoroutineTestRule
+import io.gigiperih.cityx.utils.TestUtils
+import io.gigiperih.cityx.utils.TestUtils.buildTrie
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -42,32 +43,18 @@ class CityRepositoryTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `given valid request, when getList is success, should return expected list of cities`() =
+    fun `given valid request, when getCities() is success, returns expected trie`() =
         coroutinesTestRule.testDispatcher.runBlockingTest {
-            coEvery { mockedService.getList() } returns FakeData.sortedSample
+            coEvery { mockedService.fetchResource() } returns
+                    TestUtils.buildSortedListOfCities("cities_100.json").buildTrie()
 
-            val result = objectUnderTest.getList()
-
-            assertThat(result).apply {
-                isEqualTo(FakeData.sortedSample)
-                hasSize(2)
-            }
-
-            coVerify { mockedService.getList() }
-        }
-
-    @Test
-    fun `given valid request, when getTrie is success, should return expected trie of cities`() =
-        coroutinesTestRule.testDispatcher.runBlockingTest {
-            coEvery { mockedService.getTrie() } returns FakeData.sortedTrie
-
-            val result = objectUnderTest.getTrie()
+            val result = objectUnderTest.getCities()
 
             assertThat(result).apply {
                 isNotNull()
-                isEqualTo(FakeData.sortedTrie)
             }
 
-            coVerify { mockedService.getTrie() }
+            coVerify { mockedService.fetchResource() }
+
         }
 }

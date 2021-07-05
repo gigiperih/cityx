@@ -10,7 +10,7 @@ fun List<City>?.sortAlphabetically(): List<City>? {
     // `Collection.sort()` works by calling the underlying `Arrays.sort()` method,
     // while the sorting itself uses `Insertion Sort` for arrays shorter than 47,
     // and `Quicksort` for the rest.
-    return this.sortedBy { it.name }
+    return this.sortedBy { "${it.name} ${it.country}" }
 }
 
 fun Trie.Node?.traverse(): List<City> {

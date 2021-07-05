@@ -14,11 +14,10 @@ class CityRepositoryImpl(
     private val localResourceService: LocalResourceService,
     private val dispatchers: DispatcherProvider = DefaultDispatcherProvider()
 ) : CityRepository {
-    override suspend fun getTrie(): Trie {
-//        return withContext(dispatchers.io()) {
-//            return@withContext localResourceService.getTrie()
-//        }
+    override suspend fun getCities(): Trie {
+        return withContext(dispatchers.io()) {
+            return@withContext localResourceService.fetchResource()
+        }
 
-        return localResourceService.getTrie()
     }
 }

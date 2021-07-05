@@ -1,5 +1,6 @@
 package io.gigiperih.cityx.presentation.cities
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +29,7 @@ class CitiesAdapter(private val onSelected: (City) -> Unit) :
     inner class CityViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
 
+        @SuppressLint("SetTextI18n")
         fun bind(city: City) {
             itemView.setOnClickListener {
                 onSelected.invoke(city)

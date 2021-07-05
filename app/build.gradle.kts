@@ -66,7 +66,6 @@ dependencies {
     // google map
     implementation("com.google.android.gms:play-services-places:17.0.0")
 
-
     // nav arch
     val navVersion = "2.3.5"
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")

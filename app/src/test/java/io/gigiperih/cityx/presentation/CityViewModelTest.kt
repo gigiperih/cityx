@@ -72,8 +72,11 @@ class CityViewModelTest {
                 assertThat(objectUnderTest.resultState.value is ResultState.OnLoading).isTrue()
                 objectUnderTest.search("gil")
 
+                // init
+                coVerify { mockedInteractor.search("") }
+
+                // after search
                 coVerify { mockedInteractor.search("gil") }
-                coVerify(exactly = 0) { mockedInteractor.search("") }
             }
         }
 }

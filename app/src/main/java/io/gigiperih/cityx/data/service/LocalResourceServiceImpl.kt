@@ -7,6 +7,7 @@ import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.gigiperih.cityx.R
 import io.gigiperih.cityx.data.City
+import io.gigiperih.cityx.data.mapper.sortAlphabetically
 import io.gigiperih.cityx.data.structure.Trie
 import io.gigiperih.cityx.utils.dispatcher.DefaultDispatcherProvider
 import io.gigiperih.cityx.utils.dispatcher.DispatcherProvider
@@ -32,7 +33,7 @@ class LocalResourceServiceImpl(
                 .openRawResource(R.raw.cities)
                 .bufferedReader()
                 .readText()
-                .let { adapter.fromJson(it) }
+                .let { adapter.fromJson(it) }.sortAlphabetically()
         } catch (e: JsonDataException) {
             null
         }

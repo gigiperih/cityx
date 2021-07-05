@@ -63,7 +63,7 @@ class CitiesFragment : Fragment() {
 
         text_input_search.textChanges()
             .filterNot { it.isNullOrEmpty() }
-            .debounce(1000)
+            .debounce(666)
             .onEach {
                 viewModel.search(it.toString())
             }

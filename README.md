@@ -46,3 +46,6 @@ hundreds of thousands item
 - Can be modularized.
 - `Trie` implementation truncates some duplicates data.
 
+## notes:
+- Bad english communication skills
+- Should have deep down theoritical knowledege
